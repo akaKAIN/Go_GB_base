@@ -1,1 +1,2 @@
-# Go_GB_base
+# GeekBrains
+Домашние задания курса Go level-1.
