@@ -62,3 +62,15 @@ func getHandlerByOperator() func(int, int) int {
 		}
 	}
 }
+
+func GetLengthFromInput() int {
+	for  {
+		input := Input("Введите верхний порог для поиска натурального числа: ")
+		num, err := strconv.Atoi(input)
+		if err != nil || num < 3 {
+			fmt.Println("Некорректный ввод")
+		} else {
+			return num
+		}
+	}
+}
