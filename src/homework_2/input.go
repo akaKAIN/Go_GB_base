@@ -3,27 +3,62 @@ package main
 import (
 	"bufio"
 	"fmt"
-	"log"
 	"os"
-	"regexp"
+	"strconv"
+	"strings"
 )
 
-func Input(msg string) (string, error) {
+func makeExpression() int {
+	var (
+		numA, numB       int
+		operationHandler func(int, int) int
+	)
+	numA = getOperand()
+	operationHandler = getHandlerByOperator()
+	numB = getOperand()
+
+	return operationHandler(numA, numB)
+
+}
+
+func Input(msg string) string {
 	var scanner = bufio.NewScanner(os.Stdin)
 	fmt.Print(msg)
 	scanner.Scan()
 	text := scanner.Text()
-	if text == "" {
-		return text, fmt.Errorf("Вы ввели пустую строку\n")
-	}
-
-	return text, nil
+	return text
 }
 
-func isCleanedString(word string) bool {
-	isClean, err := regexp.MatchString("^[0-9]", word)
-	if err != nil {
-		log.Printf("Cleaned error: %s\n", err)
+func getOperand() int {
+	for {
+		input := Input("Введите целое число: ")
+		num, err := strconv.Atoi(input)
+		if err != nil {
+			fmt.Printf("Значение %s не является целым числом.\n", input)
+		} else {
+			return num
+		}
 	}
-	return isClean
+}
+
+func getHandlerByOperator() func(int, int) int {
+	operators := []string{"+", "-", "*", "/"}
+	message := fmt.Sprintf("Введите один из операторов => (%s): ", strings.Join(operators, " "))
+
+	for {
+		operator := Input(message)
+		switch operator {
+		// Тут конечно лучше было бы использовать словарь, но не успел с ним разобраться
+		case "+":
+			return add
+		case "-":
+			return sub
+		case "*":
+			return mul
+		case "/":
+			return div
+		default:
+			fmt.Printf("%q - не является доступным оператором", operator)
+		}
+	}
 }

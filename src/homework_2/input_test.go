@@ -9,8 +9,7 @@ func TestInput(t *testing.T) {
 	var (
 		titleMsg        = "Test input"
 		endInput        = []byte("\n")
-		emptyInput      = []byte("")
-		expressionInput = []byte("2+10")
+		expressionInput = []byte("2df0")
 	)
 
 	//Создаем пайп для передачи данных в терминал и чтения
@@ -31,8 +30,8 @@ func TestInput(t *testing.T) {
 		}
 	}
 
-	// Передаем в Пайп пустое значение
-	_, err = w.Write(emptyInput)
+	// Передаем в Пайп значение
+	_, err = w.Write(expressionInput)
 	if err != nil {
 		t.Fatalf("Write error: %s", err)
 	}
@@ -42,41 +41,14 @@ func TestInput(t *testing.T) {
 	defer func() { os.Stdin = stdin }()
 	os.Stdin = r
 
-	input, err := Input(titleMsg)
-	if input != "" {
-		t.Fatalf("Empty input from user is unacceptable")
-	}
-
-	_, err = w.Write(expressionInput)
-	if err != nil {
-		t.Fatalf("Write expretion error: %s", err)
-	}
-	confirmInput()
-
-	input, err = Input(titleMsg)
-	if err != nil {
-		t.Fatalf("No error expected, but got: %s", err)
-	}
+	input := Input(titleMsg)
 	if input != string(expressionInput) {
-		t.Fatalf("Expected input: %s, but got %s", string(expressionInput), input)
+		t.Fatalf("Expected input %s, but got %s", string(expressionInput), input)
 	}
 }
 
-func Test_isCleanedString(t *testing.T) {
-	var (
-		trueMatchValue  = "232310"
-		falseMatchValue = "23F"
-	)
+// TODO
+func Test_getOperand(t *testing.T) {}
 
-	expectedTrueResult := isCleanedString(trueMatchValue)
-	if !expectedTrueResult {
-		t.Fatalf("Expected %v, but got %v\n", true, expectedTrueResult)
-	}
-
-	expectedFalseResult := isCleanedString(falseMatchValue)
-	if !expectedFalseResult {
-		t.Fatalf("Expected %v, but got %v\n", true, expectedFalseResult)
-	}
-
-
-}
+// TODO
+func Test_getHandlerByOperator(t *testing.T) {}
