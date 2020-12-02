@@ -7,6 +7,7 @@ import (
 
 func TestInput(t *testing.T) {
 	var (
+		titleMsg        = "Test input"
 		endInput        = []byte("\n")
 		emptyInput      = []byte("")
 		expressionInput = []byte("2+10")
@@ -41,7 +42,7 @@ func TestInput(t *testing.T) {
 	defer func() { os.Stdin = stdin }()
 	os.Stdin = r
 
-	input, err := Input()
+	input, err := Input(titleMsg)
 	if input != "" {
 		t.Fatalf("Empty input from user is unacceptable")
 	}
@@ -52,11 +53,30 @@ func TestInput(t *testing.T) {
 	}
 	confirmInput()
 
-	input, err = Input()
+	input, err = Input(titleMsg)
 	if err != nil {
 		t.Fatalf("No error expected, but got: %s", err)
 	}
 	if input != string(expressionInput) {
 		t.Fatalf("Expected input: %s, but got %s", string(expressionInput), input)
 	}
+}
+
+func Test_isCleanedString(t *testing.T) {
+	var (
+		trueMatchValue  = "232310"
+		falseMatchValue = "23F"
+	)
+
+	expectedTrueResult := isCleanedString(trueMatchValue)
+	if !expectedTrueResult {
+		t.Fatalf("Expected %v, but got %v\n", true, expectedTrueResult)
+	}
+
+	expectedFalseResult := isCleanedString(falseMatchValue)
+	if !expectedFalseResult {
+		t.Fatalf("Expected %v, but got %v\n", true, expectedFalseResult)
+	}
+
+
 }

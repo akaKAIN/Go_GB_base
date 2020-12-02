@@ -3,12 +3,14 @@ package main
 import (
 	"bufio"
 	"fmt"
+	"log"
 	"os"
+	"regexp"
 )
 
-func Input() (string, error) {
+func Input(msg string) (string, error) {
 	var scanner = bufio.NewScanner(os.Stdin)
-	fmt.Print("Введите простое математическое выражение: ")
+	fmt.Print(msg)
 	scanner.Scan()
 	text := scanner.Text()
 	if text == "" {
@@ -16,4 +18,12 @@ func Input() (string, error) {
 	}
 
 	return text, nil
+}
+
+func isCleanedString(word string) bool {
+	isClean, err := regexp.MatchString("^[0-9]", word)
+	if err != nil {
+		log.Printf("Cleaned error: %s\n", err)
+	}
+	return isClean
 }
