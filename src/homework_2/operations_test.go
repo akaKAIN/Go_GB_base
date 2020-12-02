@@ -32,4 +32,10 @@ func Test_div(t *testing.T) {
 	if result != expectedResult {
 		t.Fatalf("Div error: expected %d, but got %d", expectedResult, result)
 	}
+
+	numA, numB, expectedResult = 131, 0, 0
+	result = div(numA, numB)
+	if result != expectedResult {
+		t.Fatalf("Div error: expected %d, but got %d", expectedResult, result)
+	}
 }
