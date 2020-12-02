@@ -58,7 +58,7 @@ func getHandlerByOperator() func(int, int) int {
 		case "/":
 			return div
 		default:
-			fmt.Printf("%q - не является доступным оператором", operator)
+			fmt.Printf("%q - не является доступным оператором\n", operator)
 		}
 	}
 }
