@@ -48,6 +48,9 @@ func TestInput(t *testing.T) {
 }
 
 // TODO
+func Test_makeExpression(t *testing.T) {}
+
+// TODO
 func Test_getOperand(t *testing.T) {}
 
 // TODO
