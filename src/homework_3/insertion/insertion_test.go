@@ -1,8 +1,8 @@
-package bubble
+package insertion
 
 import (
-	"reflect"
-	"testing"
+"reflect"
+"testing"
 )
 
 func TestSort(t *testing.T) {
@@ -38,3 +38,4 @@ func BenchmarkSort(b *testing.B) {
 		}
 	}
 }
+
