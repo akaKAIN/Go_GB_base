@@ -1,4 +1,4 @@
-package bubble
+package insertion
 
 import (
 	"reflect"
