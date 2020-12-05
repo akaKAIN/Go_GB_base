@@ -1,10 +1,10 @@
 package main
 
 import (
-	"homework_2/expression_calc"
+	"fmt"
 )
 
 func main() {
-	//fmt.Printf("Результат: %d\n", makeExpression())
-	expression_calc.ParseOperands("123+123")
+	fmt.Printf("Результат: %d\n", makeExpression())
+	fmt.Println(CalcExpression())
 }

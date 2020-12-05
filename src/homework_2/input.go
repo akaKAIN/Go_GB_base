@@ -3,6 +3,7 @@ package main
 import (
 	"bufio"
 	"fmt"
+	"homework_2/expression_calc"
 	"os"
 	"strconv"
 	"strings"
@@ -39,7 +40,7 @@ func Input(msg string) string {
 
 /**
 Парсинг числа введенного пользователем
- */
+*/
 func getOperand() int {
 	for {
 		input := Input("Введите целое число: ")
@@ -55,7 +56,7 @@ func getOperand() int {
 /*
 Получение от пользователя ввода математического оператора
 return: функцию соответствующую введеному мат.оператору
- */
+*/
 func getHandlerByOperator() func(int, int) int {
 	operators := []string{"+", "-", "*", "/"}
 	message := fmt.Sprintf("Введите один из операторов => (%s): ", strings.Join(operators, " "))
@@ -70,4 +71,25 @@ func getHandlerByOperator() func(int, int) int {
 			fmt.Printf("%q - не является доступным оператором\n", operator)
 		}
 	}
+}
+
+/*
+Получение от пользователя математического выражения
+Возвращает результат вычисления
+ */
+func CalcExpression() (result int) {
+	operationsMap := getOperationsMap()
+	for {
+		input := Input("Введите математическое выражение: ")
+		nums, operator, err := expression_calc.ParseOperands(input)
+		if err != nil {
+			fmt.Println(err)
+			continue
+		} else {
+			handlerFunc := operationsMap[operator]
+			result = handlerFunc(nums[0], nums[1])
+			break
+		}
+	}
+	return
 }
