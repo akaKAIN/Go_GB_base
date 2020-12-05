@@ -3,7 +3,7 @@ run:
 	go run ./${dir}
 
 test:
-	go test -v ./${dir}
+	go test -v ./${dir}/...
 
 cover:
 	go test -coverprofile=./${dir}/cover.out ./${dir}
