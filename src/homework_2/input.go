@@ -8,6 +8,10 @@ import (
 	"strings"
 )
 
+/*
+Функция содержащая полный цикл ввода и вычисления мат. выражения.
+return: рузультат мат.вычислений.
+*/
 func makeExpression() int {
 	var (
 		numA, numB       int
@@ -21,6 +25,10 @@ func makeExpression() int {
 
 }
 
+/*
+Запрос ввода от пользователя.
+return: введеный текст
+*/
 func Input(msg string) string {
 	var scanner = bufio.NewScanner(os.Stdin)
 	fmt.Print(msg)
@@ -29,6 +37,9 @@ func Input(msg string) string {
 	return text
 }
 
+/**
+Парсинг числа введенного пользователем
+ */
 func getOperand() int {
 	for {
 		input := Input("Введите целое число: ")
@@ -41,6 +52,10 @@ func getOperand() int {
 	}
 }
 
+/*
+Получение от пользователя ввода математического оператора
+return: функцию соответствующую введеному мат.оператору
+ */
 func getHandlerByOperator() func(int, int) int {
 	operators := []string{"+", "-", "*", "/"}
 	message := fmt.Sprintf("Введите один из операторов => (%s): ", strings.Join(operators, " "))
