@@ -44,20 +44,14 @@ func getOperand() int {
 func getHandlerByOperator() func(int, int) int {
 	operators := []string{"+", "-", "*", "/"}
 	message := fmt.Sprintf("Введите один из операторов => (%s): ", strings.Join(operators, " "))
+	operationsMap := getOperationsMap()
 
 	for {
 		operator := Input(message)
-		switch operator {
-		// Тут конечно лучше было бы использовать словарь, но не успел с ним разобраться
-		case "+":
-			return add
-		case "-":
-			return sub
-		case "*":
-			return mul
-		case "/":
-			return div
-		default:
+		handlerFunc, isExists := operationsMap[operator]
+		if isExists {
+			return handlerFunc
+		} else {
 			fmt.Printf("%q - не является доступным оператором\n", operator)
 		}
 	}
