@@ -5,12 +5,12 @@ import (
 	"fmt"
 )
 
-func ParseOperands(expression string) []int {
+func ParseOperands(expression string) ([]int, string) {
 	exp := []byte(expression)
 	if bytes.ContainsAny(exp, "+-*/") {
 	}
 	for ind, val := range exp {
 		fmt.Printf("ind: %v, val: %v\n", ind, val)
 	}
-	return nil
+	return nil, ""
 }
