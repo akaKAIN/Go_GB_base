@@ -1,5 +1,10 @@
 package main
 
+/*
+Сложность O(n log(log n))) взята из Wiki и с учетом того,
+что проход осуществляется только по нечетным числам -
+разделена на 2.
+ */
 func GetSimpleArray(length int) []int {
 	var arr = []int{2}
 	for i := 3; i <= length; i += 2 {
