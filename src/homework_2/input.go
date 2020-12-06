@@ -74,6 +74,22 @@ func getHandlerByOperator() func(int, int) int {
 }
 
 /*
+Получение от пользователя ввода с числом
+верхней границей натуральный чисел.
+*/
+func GetLengthFromInput() int {
+	for {
+		input := Input("Введите верхний порог для поиска натурального числа: ")
+		num, err := strconv.Atoi(input)
+		if err != nil || num < 3 {
+			fmt.Println("Некорректный ввод")
+		} else {
+			return num
+		}
+	}
+}
+
+/*
 Получение от пользователя математического выражения
 Возвращает результат вычисления
  */
