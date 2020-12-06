@@ -3,11 +3,16 @@ package main
 import (
 	"bufio"
 	"fmt"
+	"homework_2/expression_calc"
 	"os"
 	"strconv"
 	"strings"
 )
 
+/*
+Функция содержащая полный цикл ввода и вычисления мат. выражения.
+return: рузультат мат.вычислений.
+*/
 func makeExpression() int {
 	var (
 		numA, numB       int
@@ -21,6 +26,10 @@ func makeExpression() int {
 
 }
 
+/*
+Запрос ввода от пользователя.
+return: введеный текст
+*/
 func Input(msg string) string {
 	var scanner = bufio.NewScanner(os.Stdin)
 	fmt.Print(msg)
@@ -29,6 +38,9 @@ func Input(msg string) string {
 	return text
 }
 
+/**
+Парсинг числа введенного пользователем
+*/
 func getOperand() int {
 	for {
 		input := Input("Введите целое число: ")
@@ -41,30 +53,32 @@ func getOperand() int {
 	}
 }
 
+/*
+Получение от пользователя ввода математического оператора
+return: функцию соответствующую введеному мат.оператору
+*/
 func getHandlerByOperator() func(int, int) int {
 	operators := []string{"+", "-", "*", "/"}
 	message := fmt.Sprintf("Введите один из операторов => (%s): ", strings.Join(operators, " "))
+	operationsMap := getOperationsMap()
 
 	for {
 		operator := Input(message)
-		switch operator {
-		// Тут конечно лучше было бы использовать словарь, но не успел с ним разобраться
-		case "+":
-			return add
-		case "-":
-			return sub
-		case "*":
-			return mul
-		case "/":
-			return div
-		default:
+		handlerFunc, isExists := operationsMap[operator]
+		if isExists {
+			return handlerFunc
+		} else {
 			fmt.Printf("%q - не является доступным оператором\n", operator)
 		}
 	}
 }
 
+/*
+Получение от пользователя ввода с числом
+верхней границей натуральный чисел.
+*/
 func GetLengthFromInput() int {
-	for  {
+	for {
 		input := Input("Введите верхний порог для поиска натурального числа: ")
 		num, err := strconv.Atoi(input)
 		if err != nil || num < 3 {
@@ -73,4 +87,25 @@ func GetLengthFromInput() int {
 			return num
 		}
 	}
+}
+
+/*
+Получение от пользователя математического выражения
+Возвращает результат вычисления
+ */
+func CalcExpression() (result int) {
+	operationsMap := getOperationsMap()
+	for {
+		input := Input("Введите математическое выражение: ")
+		nums, operator, err := expression_calc.ParseOperands(input)
+		if err != nil {
+			fmt.Println(err)
+			continue
+		} else {
+			handlerFunc := operationsMap[operator]
+			result = handlerFunc(nums[0], nums[1])
+			break
+		}
+	}
+	return
 }

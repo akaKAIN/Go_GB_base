@@ -16,3 +16,12 @@ func div(numA, numB int) int {
 	}
 	return numA / numB
 }
+
+func getOperationsMap() map[string]func(int, int) int {
+	m := make(map[string]func(int, int) int)
+	m["+"] = add
+	m["-"] = sub
+	m["*"] = mul
+	m["/"] = div
+	return m
+}
