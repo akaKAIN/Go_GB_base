@@ -96,7 +96,7 @@ func GetLengthFromInput() int {
 func CalcExpression() (result int) {
 	operationsMap := getOperationsMap()
 	for {
-		input := Input("Введите математическое выражение: ")
+		input := Input("Введите математическое выражение (пример: 256+32): ")
 		nums, operator, err := expression_calc.ParseOperands(input)
 		if err != nil {
 			fmt.Println(err)

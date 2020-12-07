@@ -1,11 +1,12 @@
-dir = "homework_1"
+hw = "1"
+
 run:
-	go run ./${dir}
+	go run ./homework_${hw}
 
 test:
-	go test -v ./${dir}/...
+	go test -v ./homework_${hw}/...
 
 cover:
-	go test -coverprofile=./${dir}/cover.out ./${dir}
-	go tool cover -html=./${dir}/cover.out
+	go test -coverprofile=./homework_${hw}/cover.out ./homework_${hw}
+	go tool cover -html=./homework_${hw}/cover.out
 
