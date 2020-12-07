@@ -15,8 +15,6 @@ func rotateSpinner() {
 	}
 }
 
-
-
 func main() {
 	rotateSpinner()
 }
