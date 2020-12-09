@@ -10,3 +10,5 @@ cover:
 	go test -coverprofile=./homework_${hw}/cover.out ./homework_${hw}
 	go tool cover -html=./homework_${hw}/cover.out
 
+bench:
+	go test -bench=. ./homework_${hw}/...
