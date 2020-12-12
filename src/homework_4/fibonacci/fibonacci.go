@@ -4,15 +4,18 @@ import (
 	"math"
 )
 
-
-func calcFibonacciBenet(limit int) int {
+// Получение числа Фибоначчи по формуле Бине. Никаких рекурсий и итераций.
+func CalcFibonacciBine(limit int) int {
 	l := float64(limit)
-	return int(math.Pow((1+math.Sqrt(5))/2, l-math.Pow((1-math.Sqrt(5))/2, l)/math.Sqrt(5)))
+	p1 := (1 + math.Sqrt(5)) / 2
+	p2 := (1 - math.Sqrt(5)) / 2
+	p := math.Pow(p1, l) - math.Pow(p2, l)
+	return int(math.Round(p / math.Sqrt(5)))
 }
 
-//func calcFibonacciRecursive(limit int) {
-//	var result int
-//	for i := 2; i < limit; i++ {
-//
-//	}
-//}
+func CalcFibonacciRecursive(limit int) int {
+	if limit == 0 || limit == 1 {
+		return limit
+	}
+	return CalcFibonacciRecursive(limit-2) + CalcFibonacciRecursive(limit-1)
+}

@@ -34,9 +34,18 @@ var CaseList = []CaseFibonacci{
 	},
 }
 
-func Test_fibonacciBinet(t *testing.T) {
+func TestCalcFibonacciBinet(t *testing.T) {
 	for _, testCase := range CaseList {
-		f := calcFibonacciBenet(testCase.n)
+		f := CalcFibonacciBine(testCase.n)
+		if f != testCase.expected {
+			t.Fatalf("Expected %d, but gotted %d", testCase.expected, f)
+		}
+	}
+}
+
+func TestCalcFibonacciRecursive(t *testing.T) {
+	for _, testCase := range CaseList {
+		f := CalcFibonacciRecursive(testCase.n)
 		if f != testCase.expected {
 			t.Fatalf("Expected %d, but gotted %d", testCase.expected, f)
 		}

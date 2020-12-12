@@ -44,8 +44,7 @@ func TestFibNum_Get(t *testing.T) {
 	for i := range keys {
 		val, err := fn.Get(keys[i])
 		if err != nil || val != values[i] {
-			t.Fatalf("Trying get val: %d by key: %d, with out put err: %v", values[i], keys[i], err,
-			)
+			t.Fatalf("Trying get val: %d by key: %d, with out put err: %v", values[i], keys[i], err)
 		}
 	}
 
@@ -92,12 +91,82 @@ func TestFibNum_calcNext(t *testing.T) {
 			t.Fatalf("Wrong data initiated for struct: %+v", fn)
 		}
 		fn.calcNext()
-		if keysLen != len(fn.keys) -1 {
+		if keysLen != len(fn.keys)-1 {
 			t.Fatalf("New key: %d wasn't pushed in keys array", c.n)
 		}
 		val, isExist := fn.data[c.n]
 		if !isExist || val != c.expected {
 			t.Fatalf("New value: %d must be equal %d", val, c.expected)
+		}
+	}
+}
+
+func BenchmarkCalcFibonacciBine(b *testing.B) {
+	caseList := []CaseFibonacci{
+		{
+			n:        50,
+			expected: 0,
+		},
+		{
+			n:        100,
+			expected: 0,
+		},
+		{
+			n:        200,
+			expected: 0,
+		},
+	}
+	for i := 0; i < b.N; i++ {
+		for _, c := range caseList {
+			_ = CalcFibonacciBine(c.n)
+		}
+	}
+}
+
+func BenchmarkCalcFibonacciRecursive(b *testing.B) {
+	caseList := []CaseFibonacci{
+		{
+			n:        10,
+			expected: 0,
+		},
+		{
+			n:        15,
+			expected: 0,
+		},
+		{
+			n:        20,
+			expected: 0,
+		},
+	}
+	for i := 0; i < b.N; i++ {
+		for _, c := range caseList {
+			_ = CalcFibonacciRecursive(c.n)
+		}
+	}
+}
+
+func BenchmarkStructFibonacci(b *testing.B) {
+	caseList := []CaseFibonacci{
+		{
+			n:        10,
+			expected: 0,
+		},
+		{
+			n:        15,
+			expected: 0,
+		},
+		{
+			n:        20,
+			expected: 0,
+		},
+	}
+	fn := New()
+	for i := 0; i < b.N; i++ {
+		for _, c := range caseList {
+			_, err := fn.Calc(c.n)
+			if err != nil {
+				b.Fatalf("Gotted error: %v", err)
+			}
 		}
 	}
 }
