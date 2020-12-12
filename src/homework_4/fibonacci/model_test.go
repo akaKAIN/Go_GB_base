@@ -54,6 +54,51 @@ func TestFibNum_Get(t *testing.T) {
 	}
 }
 
+func TestFibNum_Calc(t *testing.T) {
+	var (
+		k0, k1, k2, k3, k4 = 0, 1, 2, 3, 4
+		v0, v1, v2, v3, v4 = 0, 1, 1, 2, 3
+		data               = make(map[int]int)
+	)
+	keys := []int{k0, k1, k2, k3, k4}
+	values := []int{v0, v1, v2, v3, v4}
+	for i := range keys {
+		data[keys[i]] = values[i]
+	}
+	fn := FibNum{
+		keys: keys,
+		data: data,
+	}
+
+	// Проверяем на получение ошибки для отрицательных чисел.
+	_, err := fn.Calc(-1)
+	if err == nil {
+		t.Fatalf("Negative numbers must call error")
+	}
+
+	// Проверяем состояния в случае, когда число уже в "мапе"
+	keysLen := len(fn.keys)
+	res, err := fn.Calc(k4)
+	if err != nil {
+		t.Fatalf("Expected error = nil, but got: %v", err)
+	}
+	if res != v4 {
+		t.Fatalf("Expected %d result, but gotted %d", v4, res)
+	}
+	if keysLen != len(fn.keys) {
+		t.Fatalf("The length of keys field should not change")
+	}
+
+	// Проверяем состояния в случае, когда число в "мапе" отсутствует
+	res, err = fn.Calc(5)
+	if keysLen == len(fn.keys) {
+		t.Fatalf("The length of keys field should grow")
+	}
+
+
+
+}
+
 func TestFibNum_calcNext(t *testing.T) {
 	var (
 		k0, k1, k2, k3, k4 = 0, 1, 2, 3, 4

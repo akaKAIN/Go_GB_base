@@ -6,7 +6,7 @@ import (
 )
 
 func main() {
-	n := 50
+	n := 40
 	fn := fibonacci.New()
 	val, err := fn.Calc(n)
 	if err != nil {
