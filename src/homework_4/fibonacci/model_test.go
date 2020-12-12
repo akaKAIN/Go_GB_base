@@ -149,15 +149,15 @@ func TestFibNum_calcNext(t *testing.T) {
 func BenchmarkCalcFibonacciBine(b *testing.B) {
 	caseList := []CaseFibonacci{
 		{
-			n:        50,
+			n:        10,
 			expected: 0,
 		},
 		{
-			n:        100,
+			n:        15,
 			expected: 0,
 		},
 		{
-			n:        200,
+			n:        20,
 			expected: 0,
 		},
 	}
