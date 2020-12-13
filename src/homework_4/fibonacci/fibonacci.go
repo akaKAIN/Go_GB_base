@@ -13,6 +13,7 @@ func CalcFibonacciBine(limit int) int {
 	return int(math.Round(p / math.Sqrt(5)))
 }
 
+// Получение Фибоначи через рекурсию
 func CalcFibonacciRecursive(limit int) int {
 	if limit == 0 || limit == 1 {
 		return limit
