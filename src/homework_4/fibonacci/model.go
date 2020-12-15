@@ -5,21 +5,21 @@ import (
 )
 
 type FibNum struct {
-	keys []int
+	num  int
 	data map[int]int
 }
 
 // Создание базового наполнения стрктуры
 // Возвращает базовую структуру с базовыми значениями для первых трех чисел ряда Фибоначчи
 func New() *FibNum {
-	var keys = []int{0, 1, 2}
 	var baseVal = []int{0, 1, 1}
 	var data = make(map[int]int)
-	for i := 0; i < 3; i++ {
-		data[keys[i]] = baseVal[i]
+	var i int
+	for ; i < 3; i++ {
+		data[i] = baseVal[i]
 	}
 	return &FibNum{
-		keys: keys,
+		num:  i,
 		data: data,
 	}
 }
@@ -53,8 +53,8 @@ func (f *FibNum) Calc(limit int) (int, error) {
 
 // Расчитать значение Фибоначчи для последующего значения от имеющегося последнего в "мапе"
 func (f *FibNum) calcNext() {
-	newKey := f.keys[len(f.keys)-1] + 1             // Получаем значение последнего ключа и инкрементируем его на 1
+	newKey := f.num + 1                             // Получаем значение последнего ключа и инкрементируем его на 1
 	newValue := f.data[newKey-1] + f.data[newKey-2] // Получаем знач. Фибоначчи для нового ключа
 	f.data[newKey] = newValue                       // Сохраняем ключ-значение в "мапу"
-	f.keys = append(f.keys, newKey)                 // Добавляем новый ключ в массив с ключами
+	f.num = newKey                                  // Добавляем новый ключ в массив с ключами
 }

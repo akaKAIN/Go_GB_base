@@ -38,7 +38,7 @@ func TestFibNum_Get(t *testing.T) {
 		data[keys[i]] = values[i]
 	}
 	fn := FibNum{
-		keys: keys,
+		num: k2,
 		data: data,
 	}
 	for i := range keys {
@@ -63,10 +63,10 @@ func TestFibNum_Calc(t *testing.T) {
 	keys := []int{k0, k1, k2, k3, k4}
 	values := []int{v0, v1, v2, v3, v4}
 	for i := range keys {
-		data[keys[i]] = values[i]
+		data[i] = values[i]
 	}
 	fn := FibNum{
-		keys: keys,
+		num: keys[len(keys) - 1],
 		data: data,
 	}
 
@@ -77,7 +77,6 @@ func TestFibNum_Calc(t *testing.T) {
 	}
 
 	// Проверяем состояния в случае, когда число уже в "мапе"
-	keysLen := len(fn.keys)
 	res, err := fn.Calc(k4)
 	if err != nil {
 		t.Fatalf("Expected error = nil, but got: %v", err)
@@ -85,17 +84,17 @@ func TestFibNum_Calc(t *testing.T) {
 	if res != v4 {
 		t.Fatalf("Expected %d result, but gotted %d", v4, res)
 	}
-	if keysLen != len(fn.keys) {
-		t.Fatalf("The length of keys field should not change")
-	}
 
 	// Проверяем состояния в случае, когда число в "мапе" отсутствует
-	res, err = fn.Calc(5)
-	if keysLen == len(fn.keys) {
-		t.Fatalf("The length of keys field should grow")
+	var key, val = 5, 5
+	res, err = fn.Calc(key)
+	if fn.num != key {
+		t.Fatalf("New key was not added")
 	}
-
-
+	res, err = fn.Get(key)
+	if err != nil || res != val {
+		t.Fatalf("Expected %d, but gotted %d, err is %v", val, res, err)
+	}
 
 }
 
@@ -126,18 +125,17 @@ func TestFibNum_calcNext(t *testing.T) {
 		data[keys[i]] = values[i]
 	}
 	fn := FibNum{
-		keys: keys,
+		num: keys[len(keys) - 1],
 		data: data,
 	}
 	for _, c := range caseList {
-		keysLen := len(fn.keys)
 		_, isExist := fn.data[c.n]
 		if isExist {
 			t.Fatalf("Wrong data initiated for struct: %+v", fn)
 		}
 		fn.calcNext()
-		if keysLen != len(fn.keys)-1 {
-			t.Fatalf("New key: %d wasn't pushed in keys array", c.n)
+		if fn.num != c.n {
+			t.Fatalf("Wrong currend num: expected %d, gotted %d", c.n, fn.num)
 		}
 		val, isExist := fn.data[c.n]
 		if !isExist || val != c.expected {
