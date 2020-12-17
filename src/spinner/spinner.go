@@ -1,11 +1,11 @@
-package main
+package spinner
 
 import (
 	"fmt"
 	"time"
 )
 
-func rotateSpinner() {
+func RotateSpinner() {
 	var spinner = [2]string{"♡", "♥"}
 	var count int
 	for {
@@ -15,6 +15,3 @@ func rotateSpinner() {
 	}
 }
 
-func main() {
-	rotateSpinner()
-}

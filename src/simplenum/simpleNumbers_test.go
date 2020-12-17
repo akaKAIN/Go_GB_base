@@ -1,4 +1,4 @@
-package main
+package simplenum
 
 import (
 	"reflect"
