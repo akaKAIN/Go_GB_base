@@ -1,9 +1,8 @@
-package main
+package input
 
 import (
 	"bufio"
 	"fmt"
-	"homework_2/expression_calc"
 	"os"
 	"strconv"
 	"strings"
@@ -60,7 +59,7 @@ return: функцию соответствующую введеному мат.
 func getHandlerByOperator() func(int, int) int {
 	operators := []string{"+", "-", "*", "/"}
 	message := fmt.Sprintf("Введите один из операторов => (%s): ", strings.Join(operators, " "))
-	operationsMap := getOperationsMap()
+	operationsMap := operations.getOperationsMap()
 
 	for {
 		operator := Input(message)
@@ -92,7 +91,7 @@ func GetLengthFromInput() int {
 /*
 Получение от пользователя математического выражения
 Возвращает результат вычисления
- */
+*/
 func CalcExpression() (result int) {
 	operationsMap := getOperationsMap()
 	for {

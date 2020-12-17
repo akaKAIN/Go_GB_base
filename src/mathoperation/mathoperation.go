@@ -1,4 +1,4 @@
-package main
+package mathoperation
 
 func add(numA, numB int) int {
 	return numA + numB
@@ -17,7 +17,7 @@ func div(numA, numB int) int {
 	return numA / numB
 }
 
-func getOperationsMap() map[string]func(int, int) int {
+func GetOperationsMap() map[string]func(int, int) int {
 	m := make(map[string]func(int, int) int)
 	m["+"] = add
 	m["-"] = sub
