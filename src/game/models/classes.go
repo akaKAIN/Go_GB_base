@@ -3,7 +3,7 @@ package models
 const (
 	zero = iota
 	basePoint
-	baseTen    = iota * 10
+	baseTen    = 10
 	adventurer = "Adventurer"
 	mage       = "Mage"
 	warrior    = "Warrior"
@@ -18,10 +18,10 @@ func GetBaseClass() *GameClass {
 	return &GameClass{
 		Title: adventurer,
 		ClassProps: Properties{
-			Mind:   basePoint,
-			Might:  basePoint,
-			Speed:  baseTen,
-			Health: baseTen,
+			Mind:   zero,
+			Might:  zero,
+			Speed:  zero,
+			Health: zero,
 			Mana:   zero,
 		},
 	}

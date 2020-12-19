@@ -30,3 +30,8 @@ func (l *Level) LevelIncrement() {
 		*l.expForNextLevel += rate * expForNextLevel
 	}
 }
+
+// Получение информации о текущем уровне
+func (l *Level) GetCurrentLevel() uint8  {
+	return *l.currentLevel
+}
