@@ -46,5 +46,21 @@ func CreatePlayer(nickname string) *Person {
 		SelfProps: &bsSelfProps,
 	}
 	person.refreshTopProps()
+	person.InitLogger()
+	person.LogAction("I'm was born!")
 	return &person
+}
+
+func (p *Person) InitLogger() {
+	p.ContextLogger = logrus.WithFields(
+		logrus.Fields{
+			"name":  p.Nickname,
+			"lvl":   fmt.Sprintf("%v", p.Level.GetCurrentLevel()),
+			"props": fmt.Sprintf("%+v", p.TotalProps),
+		},
+	)
+}
+
+func (p *Person) LogAction(actionText string) {
+	p.ContextLogger.Info(actionText)
 }
