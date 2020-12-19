@@ -10,7 +10,7 @@ type Properties struct {
 	Mana   int16
 }
 
-func (p *Properties) String() string {
+func (p Properties) String() string {
 	return fmt.Sprintf(
 		"health: %v\nmana: %v\nspeed: %v\nmind: %v\nmight: %v\n",
 		p.Health, p.Mana, p.Speed, p.Mind, p.Might,
