@@ -26,3 +26,29 @@ func GetBaseClass() *GameClass {
 		},
 	}
 }
+
+func GetMagClass() *GameClass {
+	return &GameClass{
+		Title:      mage,
+		ClassProps: Properties{
+			Mind:   basePoint,
+			Might:  0,
+			Speed:  0,
+			Health: 0,
+			Mana:   baseTen,
+		},
+	}
+}
+
+func GetWarriorClass() *GameClass {
+	return &GameClass{
+		Title:      warrior,
+		ClassProps: Properties{
+			Mind:   0,
+			Might:  basePoint,
+			Speed:  0,
+			Health: baseTen * 2,
+			Mana:   0,
+		},
+	}
+}

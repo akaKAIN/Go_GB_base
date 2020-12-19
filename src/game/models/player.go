@@ -64,3 +64,8 @@ func (p *Person) InitLogger() {
 func (p *Person) LogAction(actionText string) {
 	p.ContextLogger.Info(actionText)
 }
+
+
+func (p *Person) Attack(enemy *Person) {
+
+}

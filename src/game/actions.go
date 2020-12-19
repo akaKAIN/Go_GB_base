@@ -11,6 +11,7 @@ func getPlayer() *models.Person {
 	return models.CreatePlayer(name)
 }
 
+
 func StartGame() {
 	getPlayer()
 }
