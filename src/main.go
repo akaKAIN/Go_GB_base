@@ -1,10 +1,7 @@
 package main
 
-import (
-	"fmt"
-	"github.com/akaKAIN/Go_GB_base/src/expression_calc"
-)
+import "github.com/akaKAIN/Go_GB_base/src/game"
 
 func main() {
-	fmt.Println(expression_calc.ParseOperands("-123+45"))
+	game.GetPlayer()
 }
