@@ -29,7 +29,7 @@ func GetBaseClass() *GameClass {
 
 func GetMagClass() *GameClass {
 	return &GameClass{
-		Title:      mage,
+		Title: mage,
 		ClassProps: Properties{
 			Mind:   basePoint,
 			Might:  0,
@@ -42,7 +42,7 @@ func GetMagClass() *GameClass {
 
 func GetWarriorClass() *GameClass {
 	return &GameClass{
-		Title:      warrior,
+		Title: warrior,
 		ClassProps: Properties{
 			Mind:   0,
 			Might:  basePoint,

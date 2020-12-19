@@ -1,12 +1,14 @@
 package models
 
+import "fmt"
+
 type Equipmenter interface {
 	Equip(*Item)
 }
 
 type Equipment struct {
-	RightHand *HandWeapon
-	Body      *BodyArmor
+	Hand *HandWeapon
+	Body *BodyArmor
 }
 
 func (e *Equipment) EquipBody(item *Item) {
@@ -35,10 +37,14 @@ type Item struct {
 	Properties Properties
 }
 
+func (i Item) String() string {
+	return fmt.Sprintf("%q with props: %+v", i.Title, i.Properties)
+}
+
 func CreateEmptyEquipment() *Equipment {
 	return &Equipment{
-		RightHand: nil,
-		Body:      nil,
+		Hand: &HandWeapon{Item: new(Item)},
+		Body: &BodyArmor{Item: new(Item)},
 	}
 }
 
@@ -47,8 +53,8 @@ func (e *Equipment) GetEquipmentTotalProps() *Properties {
 	if e.Body != nil {
 		total = CalcProps(*total, e.Body.Item.Properties)
 	}
-	if e.RightHand != nil {
-		total = CalcProps(*total, e.RightHand.Item.Properties)
+	if e.Hand != nil {
+		total = CalcProps(*total, e.Hand.Item.Properties)
 	}
 	return total
 }

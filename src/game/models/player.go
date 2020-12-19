@@ -23,7 +23,13 @@ func (p Person) String() string {
 	return fmt.Sprintf("%s, level: %d", p.Nickname, *p.Level.currentLevel)
 }
 
-func (p *Person) refreshTopProps() {
+func (p Person) ShowInfo() string {
+	var message string
+	message = fmt.Sprintf("name: %s\nlevel: %v\nprops: %s", p.Nickname, p.Level.GetCurrentLevel(), p.TotalProps)
+	return message
+}
+
+func (p *Person) RefreshTopProps() {
 	p.TotalProps = CalcProps(*p.SelfProps, *p.Equipment.GetEquipmentTotalProps(), p.Class.ClassProps)
 }
 
@@ -45,7 +51,7 @@ func CreatePlayer(nickname string) *Person {
 		Equipment: bsEquipment,
 		SelfProps: &bsSelfProps,
 	}
-	person.refreshTopProps()
+	person.RefreshTopProps()
 	person.InitLogger()
 	person.LogAction("I'm was born!")
 	return &person
@@ -54,9 +60,10 @@ func CreatePlayer(nickname string) *Person {
 func (p *Person) InitLogger() {
 	p.ContextLogger = logrus.WithFields(
 		logrus.Fields{
-			"name":  p.Nickname,
-			"lvl":   fmt.Sprintf("%v", p.Level.GetCurrentLevel()),
-			"props": fmt.Sprintf("%+v", p.TotalProps),
+			"name":   p.Nickname,
+			"lvl":    fmt.Sprintf("%v", p.Level.GetCurrentLevel()),
+			"props":  fmt.Sprintf("%+v", p.TotalProps),
+			"player": fmt.Sprintf("%s", p.ShowInfo()),
 		},
 	)
 }
@@ -64,7 +71,6 @@ func (p *Person) InitLogger() {
 func (p *Person) LogAction(actionText string) {
 	p.ContextLogger.Info(actionText)
 }
-
 
 func (p *Person) Attack(enemy *Person) {
 
