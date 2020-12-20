@@ -17,6 +17,8 @@ type Person struct {
 	SelfProps     *Properties
 	TotalProps    *Properties
 	ContextLogger *logrus.Entry
+	Health uint16
+	Mana   uint16
 }
 
 func (p Person) String() string {
@@ -25,7 +27,7 @@ func (p Person) String() string {
 
 func (p Person) ShowInfo() string {
 	var message string
-	message = fmt.Sprintf("name: %s\nlevel: %v\nprops: %s", p.Nickname, p.Level.GetCurrentLevel(), p.TotalProps)
+	message = fmt.Sprintf("player: %s,\t%v lvl\nprops:\n%s", p.Nickname, p.Level.GetCurrentLevel(), p.TotalProps)
 	return message
 }
 
@@ -60,10 +62,8 @@ func CreatePlayer(nickname string) *Person {
 func (p *Person) InitLogger() {
 	p.ContextLogger = logrus.WithFields(
 		logrus.Fields{
-			"name":   p.Nickname,
-			"lvl":    fmt.Sprintf("%v", p.Level.GetCurrentLevel()),
-			"props":  fmt.Sprintf("%+v", p.TotalProps),
-			"player": fmt.Sprintf("%s", p.ShowInfo()),
+			"name": p.Nickname,
+			"lvl":  fmt.Sprintf("%v", p.Level.GetCurrentLevel()),
 		},
 	)
 }

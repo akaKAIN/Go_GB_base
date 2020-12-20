@@ -12,7 +12,7 @@ type Properties struct {
 
 func (p Properties) String() string {
 	return fmt.Sprintf(
-		"health: %v\nmana: %v\nspeed: %v\nmind: %v\nmight: %v\n",
+		"\thealth: %v\n\tmana: \t%v\n\tspeed: \t%v\n\tmind: \t%v\n\tmight: \t%v\n",
 		p.Health, p.Mana, p.Speed, p.Mind, p.Might,
 	)
 }
