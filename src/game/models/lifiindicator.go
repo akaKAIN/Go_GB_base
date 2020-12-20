@@ -9,6 +9,12 @@ type LifeIndicator struct {
 	maxValue     uint16
 }
 
+func GetNewLifeIndicator(title string, max uint16, isVital bool) *LifeIndicator {
+	li := new(LifeIndicator)
+	li.title, li.isVital, li.maxValue, li.currentValue = title, isVital, max, max
+	return li
+}
+
 // Распечатать получить строкове представление структуры
 func (li LifeIndicator) String() string {
 	return fmt.Sprintf("%s: %v/%v", li.title, li.currentValue, li.maxValue)
@@ -31,7 +37,6 @@ func (li *LifeIndicator) Loss(num uint16) (isDead bool) {
 		return true
 	}
 	return false
-
 }
 
 // Повысить масимальное значение и добавить разницу к текущему

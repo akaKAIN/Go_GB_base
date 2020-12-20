@@ -10,15 +10,15 @@ type Calculator interface {
 }
 
 type Person struct {
-	Nickname      string
-	Level         *Level
-	Class         *GameClass
-	Equipment     *Equipment
-	SelfProps     *Properties
-	TotalProps    *Properties
-	ContextLogger *logrus.Entry
-	Health uint16
-	Mana   uint16
+	Nickname        string
+	Level           *Level
+	Class           *GameClass
+	Equipment       *Equipment
+	SelfProps       *Properties
+	TotalProps      *Properties
+	ContextLogger   *logrus.Entry
+	HealthIndicator *LifeIndicator
+	ManaIndicator   *LifeIndicator
 }
 
 func (p Person) String() string {
@@ -27,7 +27,8 @@ func (p Person) String() string {
 
 func (p Person) ShowInfo() string {
 	var message string
-	message = fmt.Sprintf("player: %s,\t%v lvl\nprops:\n%s", p.Nickname, p.Level.GetCurrentLevel(), p.TotalProps)
+	message = fmt.Sprintf("player: %s,\t%v lvl\t%s\t%s\nprops:\n%s",
+		p.Nickname, p.Level.GetCurrentLevel(), p.HealthIndicator, p.ManaIndicator, p.TotalProps)
 	return message
 }
 
@@ -44,7 +45,7 @@ func CreatePlayer(nickname string) *Person {
 		Might:  basePoint,
 		Speed:  basePoint * baseTen,
 		Health: basePoint * baseTen,
-		Mana:   0,
+		Mana:   zero,
 	}
 	person := Person{
 		Nickname:  nickname,
@@ -53,8 +54,11 @@ func CreatePlayer(nickname string) *Person {
 		Equipment: bsEquipment,
 		SelfProps: &bsSelfProps,
 	}
+
 	person.RefreshTopProps()
 	person.InitLogger()
+	person.HealthIndicator = GetNewLifeIndicator("Health", uint16(person.TotalProps.Health), true)
+	person.ManaIndicator = GetNewLifeIndicator("Mana", uint16(person.TotalProps.Mana), false)
 	person.LogAction("I'm was born!")
 	return &person
 }
