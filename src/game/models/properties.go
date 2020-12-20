@@ -19,11 +19,11 @@ func (p Properties) String() string {
 
 func CalcProps(props ...Properties) *Properties {
 	resultProp := Properties{
-		Mind:   0,
-		Might:  0,
-		Speed:  0,
-		Health: 0,
-		Mana:   0,
+		Mind:   zero,
+		Might:  zero,
+		Speed:  zero,
+		Health: zero,
+		Mana:   zero,
 	}
 
 	for _, prop := range props {
