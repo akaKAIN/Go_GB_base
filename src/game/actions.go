@@ -11,6 +11,10 @@ func getPlayer() *models.Person {
 	return models.CreatePlayer(name)
 }
 
+func createEnemy(name string) *models.Person {
+	return models.CreatePlayer(name)
+}
+
 func StartGame() {
 	player := getPlayer()
 	sword := models.CreateWeapon("Base", "none")
@@ -19,4 +23,11 @@ func StartGame() {
 	player.RefreshTopProps()
 	player.LogAction(fmt.Sprintf("%s: %+v was equipped", sword.Title, sword.Properties))
 	fmt.Println(player.ShowInfo())
+
+	worm := createEnemy("Worm")
+	player.PhysicalAttack(worm)
+
+	for worm.HealthIndicator.Get() > 0 {
+		player.PhysicalAttack(worm)
+	}
 }

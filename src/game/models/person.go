@@ -76,6 +76,9 @@ func (p *Person) LogAction(actionText string) {
 	p.ContextLogger.Info(actionText)
 }
 
-func (p *Person) Attack(enemy *Person) {
-//	TODO Attack method here or in Item struct (need to fink)
+func (p *Person) PhysicalAttack(enemy *Person) {
+	damage := p.TotalProps.Might
+	enemy.HealthIndicator.Loss(uint16(damage))
+	attackInfo := fmt.Sprintf("%s get damage (%v) from %s", enemy.Nickname, damage, p.Nickname)
+	p.LogAction(attackInfo)
 }
