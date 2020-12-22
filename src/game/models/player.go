@@ -77,5 +77,5 @@ func (p *Person) LogAction(actionText string) {
 }
 
 func (p *Person) Attack(enemy *Person) {
-
+//	TODO Attack method here or in Item struct (need to fink)
 }

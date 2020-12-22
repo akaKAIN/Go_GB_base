@@ -3,10 +3,10 @@ package models
 import "fmt"
 
 type LifeIndicator struct {
-	title        string
-	isVital      bool
-	currentValue uint16
-	maxValue     uint16
+	title        string // Заголовок (название) индикатора
+	isVital      bool   // Является ли он жизненноважным
+	currentValue uint16 // Текущее значение индикатора
+	maxValue     uint16 // Максимальное значение индикатора
 }
 
 func GetNewLifeIndicator(title string, max uint16, isVital bool) *LifeIndicator {
@@ -15,7 +15,7 @@ func GetNewLifeIndicator(title string, max uint16, isVital bool) *LifeIndicator 
 	return li
 }
 
-// Распечатать получить строкове представление структуры
+// Строковое представление структуры
 func (li LifeIndicator) String() string {
 	return fmt.Sprintf("%s: %v/%v", li.title, li.currentValue, li.maxValue)
 }

@@ -11,7 +11,7 @@ func (i Item) String() string {
 	return fmt.Sprintf("%q with props: %+v", i.Title, i.Properties)
 }
 
-func GetWeapon(title string, speciality string) *Item {
+func CreateWeapon(title string, speciality string) *Item {
 	var (
 		weaponProps = new(Properties)
 	)

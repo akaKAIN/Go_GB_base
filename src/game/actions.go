@@ -13,10 +13,10 @@ func getPlayer() *models.Person {
 
 func StartGame() {
 	player := getPlayer()
-	sword := models.GetWeapon("Base", "none")
-	fmt.Println(sword)
-	player.Equipment.EquipBody(sword)
+	sword := models.CreateWeapon("Base", "none")
+
+	models.EquipItem(player.Equipment.Hand, sword)
 	player.RefreshTopProps()
-	player.LogAction("Sword was equipped")
+	player.LogAction(fmt.Sprintf("%s: %+v was equipped", sword.Title, sword.Properties))
 	fmt.Println(player.ShowInfo())
 }

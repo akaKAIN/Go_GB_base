@@ -9,9 +9,8 @@ type Equipment struct {
 	Body *BodyArmor
 }
 
-func (e *Equipment) EquipBody(item *Item) {
-	//TODO: добавить интерфейс для добавления экипировки
-	e.Body.Equip(item)
+func EquipItem(e Equipmenter, item *Item) {
+	e.Equip(item)
 }
 
 type HandWeapon struct {
