@@ -76,9 +76,17 @@ func (p *Person) LogAction(actionText string) {
 	p.ContextLogger.Info(actionText)
 }
 
-func (p *Person) PhysicalAttack(enemy *Person) {
-	damage := p.TotalProps.Might
+func (p *Person) attack(propertyModifier int16, damageDesc string, enemy *Person) {
+	damage := propertyModifier
 	enemy.HealthIndicator.Loss(uint16(damage))
-	attackInfo := fmt.Sprintf("%s get damage (%v) from %s", enemy.Nickname, damage, p.Nickname)
+	attackInfo := fmt.Sprintf("%s get %s (%v) from %s", enemy.Nickname, damageDesc, damage, p.Nickname)
 	p.LogAction(attackInfo)
+}
+
+func (p *Person) PhysicalAttack(enemy *Person) {
+	p.attack(p.TotalProps.Might, "physical damage", enemy)
+}
+
+func (p *Person) MagicAttack(enemy *Person) {
+	p.attack(p.TotalProps.Mind, "magic damage", enemy)
 }
