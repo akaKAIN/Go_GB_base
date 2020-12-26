@@ -9,10 +9,10 @@ import (
 
 func ParseOperands(expression string) ([]int, string, error) {
 	var (
-		operand string
+		operand   string
 		operators = "+-*/"
-		strArr []string
-		intArr = make([]int, 2, 2)
+		strArr    []string
+		intArr    = make([]int, 2, 2)
 	)
 	exp := []byte(expression)
 	if !bytes.ContainsAny(exp, operators) {
@@ -41,4 +41,3 @@ func ParseOperands(expression string) ([]int, string, error) {
 
 	return intArr, operand, nil
 }
-
