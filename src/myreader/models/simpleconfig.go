@@ -222,7 +222,7 @@ func isPortValid(port string) []error {
 		errArr = append(errArr, err)
 	}
 	portLen := utf8.RuneCountInString(port)
-	if portLen > 6 || portLen < 4 {
+	if portLen > 5 || portLen < 4 {
 		errArr = append(errArr, fmt.Errorf("invalid length of port number"))
 	}
 	return errArr

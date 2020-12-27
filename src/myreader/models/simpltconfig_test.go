@@ -1,6 +1,10 @@
 package models
 
-import "testing"
+import (
+	"fmt"
+	"reflect"
+	"testing"
+)
 
 func Test_hasMatch(t *testing.T) {
 	cases := []struct {
@@ -121,5 +125,77 @@ func TestURLString_IsValid(t *testing.T) {
 				testCase.expected, result, testCase.checkedText,
 			)
 		}
+	}
+}
+
+func Test_isPortValid(t *testing.T) {
+	tests := []struct {
+		port               string
+		expectedErrorCount int
+	}{
+		{
+			port: "8000",
+			expectedErrorCount: 0,
+		},
+		{
+			port: "803200",
+			expectedErrorCount: 1,
+		},
+		{
+			port: "80f00",
+			expectedErrorCount: 1,
+		},
+		{
+			port: "f00",
+			expectedErrorCount: 2,
+		},
+		{
+			port: "",
+			expectedErrorCount: 2,
+		},
+	}
+
+	for _, testCase := range tests {
+		errs := isPortValid(testCase.port)
+		resultCount := len(errs)
+		if resultCount != testCase.expectedErrorCount {
+			t.Fatalf(
+				"Expected %v, but gotten %v for port %q",
+				testCase.expectedErrorCount,
+				resultCount,
+				testCase.port,
+				)
+		}
+	}
+}
+
+
+func TestValidationResult_AddError(t *testing.T) {
+	vr := ValidationResult{Errors: map[string][]error{}}
+	key, err, err2 := "test-field", fmt.Errorf("Error\n"), fmt.Errorf("Error2\n")
+	vr.AddError(key, err)
+	if len(vr.Errors) != 1 {
+		t.Fatalf("Must be added one error, but gotten: %d", len(vr.Errors))
+	}
+	if vr.Errors[key][0] != err {
+		t.Fatalf("Added error must be equal %q", err)
+	}
+	vr.AddError(key, err2)
+	if len(vr.Errors) != 1 || len(vr.Errors[key]) != 2 {
+			t.Fatalf("Error must be added in key value-array, but was not")
+	}
+}
+
+func TestValidationResult_AddManyErrors(t *testing.T) {
+	vr := ValidationResult{Errors: map[string][]error{}}
+	errs := []error{fmt.Errorf("Error1\n"), fmt.Errorf("Error2\n")}
+	key := "test-field"
+	vr.AddManyErrors(key, errs...)
+	if len(vr.Errors) != 1 {
+		t.Fatalf("Must be add one array of errors by key, but was added: %d", len(vr.Errors))
+	}
+
+	if !reflect.DeepEqual(vr.Errors[key], errs) {
+		t.Fatalf("Expected array %q, but gotten %q", errs, vr.Errors[key])
 	}
 }
