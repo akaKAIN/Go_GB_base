@@ -10,22 +10,31 @@ import (
 	"os"
 )
 
-// Читаем файл с конфигом в формате YAML.
-// Возвращает структуру указатель на структуру конфига models.SimpleConfigYAML и ошибку
-func GetSimpleConfigYAML(fileName string) (*models.ConfigYAML, error) {
-	// Открываем файл по указанному пути
-	configFile, err := os.Open(fileName)
+// Открытие файла на чтение
+// Возвращает массив байтов прочитанного файла и ошибку.
+func GetTextFromFile(path string) ([]byte, error) {
+	file, err := os.Open(path)
 	if err != nil {
 		return nil, fmt.Errorf("Open configFile error: %s\n", err)
 	}
 	defer func() {
-		if err := configFile.Close(); err != nil {
+		if err := file.Close(); err != nil {
 			log.Fatalf("Close configFile error: %s", err)
 		}
 	}()
-
 	// Читаем открытый файл
-	configText, err := ioutil.ReadAll(configFile)
+	text, err := ioutil.ReadAll(file)
+	if err != nil {
+		return nil, err
+	}
+	return text, nil
+}
+
+// Читаем файл с конфигом в формате YAML.
+// Возвращает структуру указатель на структуру конфига models.SimpleConfigYAML и ошибку
+func GetSimpleConfigYAML(fileName string) (*models.ConfigYAML, error) {
+	// Получаем текст с файла
+	configText, err := GetTextFromFile(fileName)
 	if err != nil {
 		return nil, err
 	}
@@ -38,5 +47,3 @@ func GetSimpleConfigYAML(fileName string) (*models.ConfigYAML, error) {
 
 	return config, nil
 }
-
-//func GetSimpleConfigJSON()

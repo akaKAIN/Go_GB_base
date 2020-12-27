@@ -1,9 +1,9 @@
 package main
 
 import (
+	"fmt"
 	"github.com/akaKAIN/Go_GB_base/src/myreader"
 	"log"
-	"net/url"
 )
 
 func main() {
@@ -12,11 +12,6 @@ func main() {
 	if err != nil {
 		log.Printf("Get еconfig error: %s", err)
 	}
-	log.Println(config)
-	res, err := url.Parse(config.DBUrl)
-	if err != nil {
-		log.Println(err)
-	}
-	log.Println(res.Port())
-	log.Println(res)
+	validRes := config.GetValidationResult()
+	fmt.Println(validRes)
 }
