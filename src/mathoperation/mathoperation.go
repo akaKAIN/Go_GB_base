@@ -1,5 +1,18 @@
 package mathoperation
 
+type Add struct {
+	Calc func(int, int) int
+}
+type Sub struct {
+	Calc func(int, int) int
+}
+type Mul struct {
+	Calc func(int, int) int
+}
+type Div struct {
+	Calc func(int, int) int
+}
+
 func add(numA, numB int) int {
 	return numA + numB
 }

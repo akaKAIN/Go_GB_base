@@ -1,7 +1,5 @@
-hw = "1"
-
 run:
-	go run ./homework_${hw}
+	go run .
 
 test:
 	go test -v ./...

@@ -3,6 +3,8 @@ package input
 import (
 	"bufio"
 	"fmt"
+	"github.com/akaKAIN/Go_GB_base/src/expression_calc"
+	"github.com/akaKAIN/Go_GB_base/src/mathoperation"
 	"os"
 	"strconv"
 	"strings"
@@ -59,7 +61,7 @@ return: функцию соответствующую введеному мат.
 func getHandlerByOperator() func(int, int) int {
 	operators := []string{"+", "-", "*", "/"}
 	message := fmt.Sprintf("Введите один из операторов => (%s): ", strings.Join(operators, " "))
-	operationsMap := operations.getOperationsMap()
+	operationsMap := mathoperation.GetOperationsMap()
 
 	for {
 		operator := Input(message)
@@ -93,7 +95,7 @@ func GetLengthFromInput() int {
 Возвращает результат вычисления
 */
 func CalcExpression() (result int) {
-	operationsMap := getOperationsMap()
+	operationsMap := mathoperation.GetOperationsMap()
 	for {
 		input := Input("Введите математическое выражение (пример: 256+32): ")
 		nums, operator, err := expression_calc.ParseOperands(input)

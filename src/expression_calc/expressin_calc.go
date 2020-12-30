@@ -10,16 +10,17 @@ import (
 func ParseOperands(expression string) ([]int, string, error) {
 	var (
 		operand   string
-		operators = "+-*/"
 		strArr    []string
+		operators = "+-*/"
 		intArr    = make([]int, 2, 2)
 	)
 	exp := []byte(expression)
 	if !bytes.ContainsAny(exp, operators) {
-		return nil, "", fmt.Errorf("Введено неверное выражение.\n")
+		return nil, "", fmt.Errorf("Неверное выражение - неизвестный математический оператор.\n")
 	}
-	for _, val := range exp {
-		if strings.ContainsRune(operators, rune(val)) {
+	for ind, val := range exp {
+		// Пропускаем первый символ выражения (число отрицательное)
+		if strings.ContainsRune(operators, rune(val)) && ind != 0 {
 			operand = string(val)
 			break
 		}
@@ -30,7 +31,7 @@ func ParseOperands(expression string) ([]int, string, error) {
 		// Приводим строковоые значения к числу и добаявляем в слайс с числами.
 		for ind, val := range strArr {
 			if num, err := strconv.Atoi(val); err != nil {
-				return nil, "", fmt.Errorf("Неверное выражение - введены ннкорректные числа\n")
+				return nil, "", fmt.Errorf("Неверное выражение - введены некорректные числа\n")
 			} else {
 				intArr[ind] = num
 			}
