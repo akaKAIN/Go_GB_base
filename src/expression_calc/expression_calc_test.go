@@ -50,8 +50,6 @@ func TestParseOperands(t *testing.T) {
 			expectedNums:    []int{-111, 11},
 			expectedOperand: "+",
 		},
-
-
 	}
 
 	for _, test := range caseList {
