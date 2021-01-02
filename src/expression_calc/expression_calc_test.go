@@ -54,7 +54,8 @@ func TestParseOperands(t *testing.T) {
 
 	for _, test := range caseList {
 		nums, operand, err := ParseOperands(test.expression)
-		if (err == nil) == test.expectedError {
+		errorExist := err != nil
+		if errorExist != test.expectedError {
 			t.Fatalf("Expected error: %v, but gotted: %v", test.expectedError, err)
 		}
 		if !test.expectedError {
