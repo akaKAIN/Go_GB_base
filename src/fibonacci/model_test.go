@@ -38,7 +38,7 @@ func TestFibNum_Get(t *testing.T) {
 		data[keys[i]] = values[i]
 	}
 	fn := FibNum{
-		num: k2,
+		num:  k2,
 		data: data,
 	}
 	for i := range keys {
@@ -66,7 +66,7 @@ func TestFibNum_Calc(t *testing.T) {
 		data[i] = values[i]
 	}
 	fn := FibNum{
-		num: keys[len(keys) - 1],
+		num:  keys[len(keys)-1],
 		data: data,
 	}
 
@@ -125,7 +125,7 @@ func TestFibNum_calcNext(t *testing.T) {
 		data[keys[i]] = values[i]
 	}
 	fn := FibNum{
-		num: keys[len(keys) - 1],
+		num:  keys[len(keys)-1],
 		data: data,
 	}
 	for _, c := range caseList {

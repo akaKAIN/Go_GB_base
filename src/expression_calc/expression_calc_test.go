@@ -50,14 +50,13 @@ func TestParseOperands(t *testing.T) {
 			expectedNums:    []int{-111, 11},
 			expectedOperand: "+",
 		},
-
-
 	}
 
 	for _, test := range caseList {
 		nums, operand, err := ParseOperands(test.expression)
-		if (err != nil) == test.expectedError {
-			t.Fatalf("Expected error: %q, but gotted: %q", test.expectedError, err)
+		errorExist := err != nil
+		if errorExist != test.expectedError {
+			t.Fatalf("Expected error: %v, but gotted: %v", test.expectedError, err)
 		}
 		if !test.expectedError {
 			if !reflect.DeepEqual(nums, test.expectedNums) {

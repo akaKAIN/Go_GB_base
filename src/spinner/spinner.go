@@ -1,11 +1,11 @@
-package main
+package spinner
 
 import (
 	"fmt"
 	"time"
 )
 
-func rotateSpinner() {
+func RotateSpinner() {
 	var spinner = [2]string{"♡", "♥"}
 	var count int
 	for {
@@ -13,8 +13,4 @@ func rotateSpinner() {
 		time.Sleep(time.Millisecond * 300)
 		count++
 	}
-}
-
-func main() {
-	rotateSpinner()
 }
