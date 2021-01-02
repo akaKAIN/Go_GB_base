@@ -83,7 +83,7 @@ type ConfigYAML struct {
 }
 
 type ValidationResult struct {
-	Errors  map[string][]error
+	Errors map[string][]error
 }
 
 func (v *ValidationResult) AddError(key string, err error) {
@@ -118,19 +118,18 @@ func (v *ValidationResult) String() string {
 	return result
 }
 
-
 // Метод валидации полей структуры конфига
 func (c *ConfigYAML) GetValidationResult() *ValidationResult {
 	var field string
 	result := ValidationResult{
-		Errors:  make(map[string][]error),
+		Errors: make(map[string][]error),
 	}
 
 	// Проверка поля "port"
 	field = "port"
-	errs := isPortValid(c.Port)
-	if errs != nil {
-		result.AddManyErrors(field, errs...)
+	err := isPortValid(c.Port)
+	if err != nil {
+		result.AddError(field, err)
 	}
 
 	// Проверка поля "db_url"
@@ -142,9 +141,9 @@ func (c *ConfigYAML) GetValidationResult() *ValidationResult {
 	if utf8.RuneCountInString(u.Scheme) < MinLengthName {
 		result.AddError(field, fmt.Errorf("invalid length of schema name"))
 	}
-	errs = isPortValid(u.Port())
-	if errs != nil {
-		result.AddManyErrors(field, errs...)
+	err = isPortValid(u.Port())
+	if err != nil {
+		result.AddError(field, err)
 	}
 
 	// Проверка поля "jaeger_ulr"
@@ -153,9 +152,9 @@ func (c *ConfigYAML) GetValidationResult() *ValidationResult {
 	if err != nil {
 		result.AddError(field, err)
 	}
-	errs = isPortValid(u.Port())
-	if errs != nil {
-		result.AddManyErrors(field, errs...)
+	err = isPortValid(u.Port())
+	if err != nil {
+		result.AddError(field, err)
 	}
 	if len(strings.Split(u.Host, ":")[0]) < MinLengthName {
 		result.AddError(field, fmt.Errorf("to short Host name"))
@@ -171,9 +170,9 @@ func (c *ConfigYAML) GetValidationResult() *ValidationResult {
 	if err != nil {
 		result.AddError(field, err)
 	}
-	errs = isPortValid(u.Port())
-	if errs != nil {
-		result.AddManyErrors(field, errs...)
+	err = isPortValid(u.Port())
+	if err != nil {
+		result.AddError(field, err)
 	}
 	if len(strings.Split(u.Host, ":")[0]) < MinLengthName {
 		result.AddError(field, fmt.Errorf("to short Host name"))
@@ -193,9 +192,9 @@ func (c *ConfigYAML) GetValidationResult() *ValidationResult {
 		if utf8.RuneCountInString(brokerName) < MinLengthName {
 			result.AddError(field, fmt.Errorf("to short Host name (broker name)"))
 		}
-		errs = isPortValid(port)
-		if errs != nil {
-			result.AddManyErrors(field, errs...)
+		err = isPortValid(port)
+		if err != nil {
+			result.AddError(field, err)
 		}
 	}
 
@@ -215,15 +214,15 @@ func (c *ConfigYAML) GetValidationResult() *ValidationResult {
 	return &result
 }
 
-func isPortValid(port string) []error {
+func isPortValid(port string) error {
 	var errArr []error
-	_, err := strconv.Atoi(port)
+	p, err := strconv.Atoi(port)
 	if err != nil {
 		errArr = append(errArr, err)
+		return err
 	}
-	portLen := utf8.RuneCountInString(port)
-	if portLen > 5 || portLen < 4 {
-		errArr = append(errArr, fmt.Errorf("invalid length of port number"))
+	if p <= 0 || p > (1<<16)-1 {
+		return fmt.Errorf("invalid port number diapason")
 	}
-	return errArr
+	return nil
 }

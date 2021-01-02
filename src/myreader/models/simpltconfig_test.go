@@ -2,6 +2,7 @@ package models
 
 import (
 	"fmt"
+	"github.com/stretchr/testify/assert"
 	"reflect"
 	"testing"
 )
@@ -130,45 +131,43 @@ func TestURLString_IsValid(t *testing.T) {
 
 func Test_isPortValid(t *testing.T) {
 	tests := []struct {
-		port               string
-		expectedErrorCount int
+		port    string
+		isValid bool
 	}{
 		{
-			port: "8000",
-			expectedErrorCount: 0,
+			port:    "8000",
+			isValid: true,
 		},
 		{
-			port: "803200",
-			expectedErrorCount: 1,
+			port:    "803200",
+			isValid: false,
 		},
 		{
-			port: "80f00",
-			expectedErrorCount: 1,
+			port:    "80f00",
+			isValid: false,
 		},
 		{
-			port: "f00",
-			expectedErrorCount: 2,
+			port:    "-8080",
+			isValid: false,
 		},
 		{
-			port: "",
-			expectedErrorCount: 2,
+			port:    "33333",
+			isValid: true,
+		},
+		{
+			port:    "f00",
+			isValid: false,
+		},
+		{
+			port:    "",
+			isValid: false,
 		},
 	}
-
 	for _, testCase := range tests {
-		errs := isPortValid(testCase.port)
-		resultCount := len(errs)
-		if resultCount != testCase.expectedErrorCount {
-			t.Fatalf(
-				"Expected %v, but gotten %v for port %q",
-				testCase.expectedErrorCount,
-				resultCount,
-				testCase.port,
-				)
-		}
+		err := isPortValid(testCase.port)
+		assert.Equal(t, err == nil, testCase.isValid, "Should match")
 	}
 }
-
 
 func TestValidationResult_AddError(t *testing.T) {
 	vr := ValidationResult{Errors: map[string][]error{}}
@@ -182,7 +181,7 @@ func TestValidationResult_AddError(t *testing.T) {
 	}
 	vr.AddError(key, err2)
 	if len(vr.Errors) != 1 || len(vr.Errors[key]) != 2 {
-			t.Fatalf("Error must be added in key value-array, but was not")
+		t.Fatalf("Error must be added in key value-array, but was not")
 	}
 }
 

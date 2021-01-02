@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"github.com/akaKAIN/Go_GB_base/src/myreader"
 	"log"
+	"math"
 )
 
 func main() {
@@ -14,4 +15,5 @@ func main() {
 	}
 	validRes := config.GetValidationResult()
 	fmt.Println(validRes)
+	math.Pow(2, 2)
 }
