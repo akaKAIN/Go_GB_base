@@ -2,6 +2,7 @@ package models
 
 import (
 	"fmt"
+	"github.com/sirupsen/logrus"
 	"net/url"
 	"regexp"
 	"strconv"
@@ -22,28 +23,16 @@ type URLDataBase string
 type URLString string
 type MessageBrokerString string
 
-// Структура для конфигруционного файла в JSON-формате.
-// Валидация через резулярные выражения
-type SimpleConfigJSON struct {
-	Port        PortString          `json:"port"`
-	DBUrl       URLDataBase         `json:"db_url"`
-	JaegerURL   URLString           `json:"jaeger_url"`
-	SentryURL   URLString           `json:"sentry_url"`
-	KafkaBroker MessageBrokerString `json:"kafka_broker"`
-	AppID       string              `json:"some_app_id"`
-	AppKey      string              `json:"some_app_key"`
-}
-
 // Структура для конфигруционного файла в YAML-формате.
 // Валидация через резулярные выражения
 type SimpleConfigYAML struct {
-	Port        PortString          `yaml:"port"`
-	DBUrl       URLDataBase         `yaml:"db_url"`
-	JaegerURL   URLString           `yaml:"jaeger_url"`
-	SentryURL   URLString           `yaml:"sentry_url"`
-	KafkaBroker MessageBrokerString `yaml:"kafka_broker"`
-	AppID       string              `yaml:"some_app_id"`
-	AppKey      string              `yaml:"some_app_key"`
+	Port        PortString          `yaml:"port" json:"port"`
+	DBUrl       URLDataBase         `yaml:"db_url" json:"db_url"`
+	JaegerURL   URLString           `yaml:"jaeger_url" json:"jaeger_url"`
+	SentryURL   URLString           `yaml:"sentry_url" json:"sentry_url"`
+	KafkaBroker MessageBrokerString `yaml:"kafka_broker" json:"kafka_broker"`
+	AppID       string              `yaml:"some_app_id" json:"some_app_id"`
+	AppKey      string              `yaml:"some_app_key" json:"some_app_key"`
 }
 
 // Проверка на соответствия переданой строки паттерну регурялного выражения
@@ -72,28 +61,33 @@ func (p *PortString) IsValid() bool {
 
 // Структура для файла конфигруций.
 // Валидация реализована через пакет net/url
-type ConfigYAML struct {
-	Port        string `yaml:"port"`
-	DBUrl       string `yaml:"db_url"`
-	JaegerURL   string `yaml:"jaeger_url"`
-	SentryURL   string `yaml:"sentry_url"`
-	KafkaBroker string `yaml:"kafka_broker"`
-	AppID       string `yaml:"some_app_id"`
-	AppKey      string `yaml:"some_app_key"`
+type ConfigStruct struct {
+	Port        string `yaml:"port" json:"port"`
+	DBUrl       string `yaml:"db_url" json:"db_url"`
+	JaegerURL   string `yaml:"jaeger_url" json:"jaeger_url"`
+	SentryURL   string `yaml:"sentry_url" json:"sentry_url"`
+	KafkaBroker string `yaml:"kafka_broker" json:"kafka_broker"`
+	AppID       string `yaml:"some_app_id" json:"some_app_id"`
+	AppKey      string `yaml:"some_app_key" json:"some_app_key"`
 }
 
 type ValidationResult struct {
+	field  string
 	Errors map[string][]error
 }
 
-func (v *ValidationResult) AddError(key string, err error) {
-	v.Errors[key] = append(v.Errors[key], err)
+func (v *ValidationResult) GetField() string {
+	return v.field
 }
 
-func (v *ValidationResult) AddManyErrors(key string, errArr ...error) {
-	for _, err := range errArr {
-		v.AddError(key, err)
+func (v *ValidationResult) SetField(field string) {
+	if field != "" {
+		v.field = field
 	}
+}
+
+func (v *ValidationResult) AddError(err error) {
+	v.Errors[v.field] = append(v.Errors[v.field], err)
 }
 
 func (v *ValidationResult) IsValid() bool {
@@ -104,122 +98,122 @@ func (v *ValidationResult) Detail() map[string][]error {
 	return v.Errors
 }
 
-func (v *ValidationResult) String() string {
-	var result string
-	for key := range v.Errors {
-		result += fmt.Sprintf("%s\n", key)
-		for _, err := range v.Errors[key] {
-			result += fmt.Sprintf("\t- %s\n", err)
+func (v *ValidationResult) ErrorHandler(err error) {
+	if err != nil {
+		v.AddError(err)
+	}
+}
+
+func (v *ValidationResult) Print() {
+	if v.IsValid() {
+		return
+	}
+	for key, errorsArr := range v.Errors {
+		for _, err := range errorsArr {
+			logrus.WithFields(
+				logrus.Fields{
+					key: err,
+				},
+			).Error("Validation error:")
 		}
+
 	}
-	if result == "" {
-		result = fmt.Sprintf("config is valid")
-	}
-	return result
 }
 
 // Метод валидации полей структуры конфига
-func (c *ConfigYAML) GetValidationResult() *ValidationResult {
-	var field string
+func (c *ConfigStruct) GetValidationResult() *ValidationResult {
 	result := ValidationResult{
 		Errors: make(map[string][]error),
 	}
 
 	// Проверка поля "port"
-	field = "port"
-	err := isPortValid(c.Port)
-	if err != nil {
-		result.AddError(field, err)
-	}
+	result.SetField("port")
+	result.ErrorHandler(isPortValid(c.Port))
 
 	// Проверка поля "db_url"
-	field = "db_url"
+	result.SetField("db_url")
 	u, err := url.Parse(c.DBUrl)
-	if err != nil {
-		result.AddError(field, err)
-	}
+	result.ErrorHandler(err)
+
 	if utf8.RuneCountInString(u.Scheme) < MinLengthName {
-		result.AddError(field, fmt.Errorf("invalid length of schema name"))
+		result.AddError(fmt.Errorf("invalid length of schema name"))
 	}
-	err = isPortValid(u.Port())
-	if err != nil {
-		result.AddError(field, err)
-	}
+	result.ErrorHandler(isPortValid(u.Port()))
 
 	// Проверка поля "jaeger_ulr"
-	field = "jaeger_ulr"
+	result.SetField("jaeger_ulr")
 	u, err = url.Parse(c.JaegerURL)
-	if err != nil {
-		result.AddError(field, err)
-	}
-	err = isPortValid(u.Port())
-	if err != nil {
-		result.AddError(field, err)
-	}
-	if len(strings.Split(u.Host, ":")[0]) < MinLengthName {
-		result.AddError(field, fmt.Errorf("to short Host name"))
+	result.ErrorHandler(err)
+
+	if strings.Contains(u.Host, ":") {
+		result.ErrorHandler(isPortValid(u.Port()))
+		if len(strings.Split(u.Host, ":")[0]) < MinLengthName {
+			result.AddError(fmt.Errorf("to short Host name"))
+		}
+	} else {
+		result.ErrorHandler(fmt.Errorf("no port value"))
 	}
 	protocol := "http"
 	if !strings.Contains(u.Scheme, protocol) {
-		result.AddError(field, fmt.Errorf("invalid http in schema"))
+		result.AddError(fmt.Errorf("invalid http in schema"))
 	}
 
 	// Проверка поля "sentry_url"
-	field = "sentry_url"
+	result.SetField("sentry_url")
 	u, err = url.Parse(c.SentryURL)
-	if err != nil {
-		result.AddError(field, err)
-	}
-	err = isPortValid(u.Port())
-	if err != nil {
-		result.AddError(field, err)
-	}
-	if len(strings.Split(u.Host, ":")[0]) < MinLengthName {
-		result.AddError(field, fmt.Errorf("to short Host name"))
-	}
-	protocol = "http"
-	if !strings.Contains(u.Scheme, protocol) {
-		result.AddError(field, fmt.Errorf("invalid http in schema"))
+	result.ErrorHandler(err)
+	if u != nil {
+		result.ErrorHandler(isPortValid(u.Port()))
+		if len(strings.Split(u.Host, ":")[0]) < MinLengthName {
+			result.AddError(fmt.Errorf("to short Host name"))
+		}
+
+		protocol = "http"
+		if !strings.Contains(u.Scheme, protocol) {
+			result.AddError(fmt.Errorf("invalid http in schema"))
+		}
 	}
 
 	// Проверка поля "kafka_broker"
-	field = "kafka_broker"
-	bm := strings.Split(c.KafkaBroker, ":")
-	if len(bm) != 2 {
-		result.AddError(field, fmt.Errorf("invalid field value"))
-	} else {
-		brokerName, port := bm[0], bm[1]
-		if utf8.RuneCountInString(brokerName) < MinLengthName {
-			result.AddError(field, fmt.Errorf("to short Host name (broker name)"))
-		}
-		err = isPortValid(port)
-		if err != nil {
-			result.AddError(field, err)
+	result.SetField("kafka_broker")
+	u, err = url.Parse(c.KafkaBroker)
+	result.ErrorHandler(err)
+	if u != nil && strings.Contains(u.Host, ":") {
+		bm := strings.Split(c.KafkaBroker, ":")
+		if len(bm) != 2 {
+			result.AddError(fmt.Errorf("invalid field value"))
+		} else {
+			brokerName, port := bm[0], bm[1]
+			if utf8.RuneCountInString(brokerName) < MinLengthName {
+				result.AddError(fmt.Errorf("to short Host name (broker name)"))
+			}
+			result.ErrorHandler(isPortValid(port))
 		}
 	}
 
 	// Проверка поля "some_app_id"
-	field = "some_app_id"
+	result.SetField("some_app_id")
 	err = fmt.Errorf("no value in field")
 	if c.AppID == "" {
-		result.AddError(field, err)
+		result.AddError(err)
 	}
 
 	// Проверка поля "some_app_key"
-	field = "some_app_key"
+	result.SetField("some_app_key")
 	if c.AppKey == "" {
-		result.AddError(field, err)
+		result.AddError(err)
 	}
 
 	return &result
 }
 
 func isPortValid(port string) error {
-	var errArr []error
+	if strings.TrimSpace(port) == "" {
+		return fmt.Errorf("no port value")
+	}
 	p, err := strconv.Atoi(port)
 	if err != nil {
-		errArr = append(errArr, err)
-		return err
+		return fmt.Errorf("incorrect port value")
 	}
 	if p <= 0 || p > (1<<16)-1 {
 		return fmt.Errorf("invalid port number diapason")

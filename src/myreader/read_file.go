@@ -19,7 +19,8 @@ func GetTextFromFile(path string) ([]byte, error) {
 	}
 	defer func() {
 		if err := file.Close(); err != nil {
-			log.Fatalf("Close configFile error: %s", err)
+			log.Printf("Close configFile error: %s", err)
+			os.Exit(1)
 		}
 	}()
 	// Читаем открытый файл
@@ -32,7 +33,7 @@ func GetTextFromFile(path string) ([]byte, error) {
 
 // Читаем файл с конфигом в формате YAML.
 // Возвращает структуру указатель на структуру конфига models.SimpleConfigYAML и ошибку
-func GetSimpleConfigYAML(fileName string) (*models.ConfigYAML, error) {
+func GetSimpleConfigYAML(fileName string) (*models.ConfigStruct, error) {
 	// Получаем текст с файла
 	configText, err := GetTextFromFile(fileName)
 	if err != nil {
@@ -40,7 +41,7 @@ func GetSimpleConfigYAML(fileName string) (*models.ConfigYAML, error) {
 	}
 
 	// Парсим прочитанный текст в структуру
-	config := new(models.ConfigYAML)
+	config := new(models.ConfigStruct)
 	if err := yaml.Unmarshal(configText, config); err != nil {
 		return nil, err
 	}
