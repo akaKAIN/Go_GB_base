@@ -20,7 +20,7 @@ func Test_calcFizzBuzz(t *testing.T) {
 		{name: "9", in: 9, out: "Fizz"},
 		{name: "15", in: 15, out: "FizzBuzz"},
 		{name: "30", in: 30, out: "FizzBuzz"},
-		{name: "31", in: 32, out: "31"},
+		{name: "31", in: 31, out: "31"},
 	}
 	for _, tc := range tests {
 		t.Run(tc.name, func(t *testing.T) {
