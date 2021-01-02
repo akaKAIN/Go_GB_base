@@ -3,7 +3,6 @@ package models
 import (
 	"fmt"
 	"github.com/stretchr/testify/assert"
-	"reflect"
 	"testing"
 )
 
@@ -172,29 +171,17 @@ func Test_isPortValid(t *testing.T) {
 func TestValidationResult_AddError(t *testing.T) {
 	vr := ValidationResult{Errors: map[string][]error{}}
 	key, err, err2 := "test-field", fmt.Errorf("Error\n"), fmt.Errorf("Error2\n")
-	vr.AddError(key, err)
+	vr.SetField(key)
+	vr.AddError(err)
 	if len(vr.Errors) != 1 {
 		t.Fatalf("Must be added one error, but gotten: %d", len(vr.Errors))
 	}
 	if vr.Errors[key][0] != err {
 		t.Fatalf("Added error must be equal %q", err)
 	}
-	vr.AddError(key, err2)
+	vr.AddError(err2)
 	if len(vr.Errors) != 1 || len(vr.Errors[key]) != 2 {
 		t.Fatalf("Error must be added in key value-array, but was not")
 	}
 }
 
-func TestValidationResult_AddManyErrors(t *testing.T) {
-	vr := ValidationResult{Errors: map[string][]error{}}
-	errs := []error{fmt.Errorf("Error1\n"), fmt.Errorf("Error2\n")}
-	key := "test-field"
-	vr.AddManyErrors(key, errs...)
-	if len(vr.Errors) != 1 {
-		t.Fatalf("Must be add one array of errors by key, but was added: %d", len(vr.Errors))
-	}
-
-	if !reflect.DeepEqual(vr.Errors[key], errs) {
-		t.Fatalf("Expected array %q, but gotten %q", errs, vr.Errors[key])
-	}
-}
