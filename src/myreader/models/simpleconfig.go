@@ -1,6 +1,7 @@
 package models
 
 import (
+	"errors"
 	"fmt"
 	"github.com/sirupsen/logrus"
 	"net/url"
@@ -12,6 +13,10 @@ import (
 
 const (
 	MinLengthName = 2
+)
+
+var (
+	noPortError = errors.New("no port value")
 )
 
 type Validator interface {
@@ -116,7 +121,6 @@ func (v *ValidationResult) Print() {
 				},
 			).Error("Validation error:")
 		}
-
 	}
 }
 
@@ -145,18 +149,20 @@ func (c *ConfigStruct) GetValidationResult() *ValidationResult {
 	u, err = url.Parse(c.JaegerURL)
 	result.ErrorHandler(err)
 
-	if strings.Contains(u.Host, ":") {
+	protocol := "http"
+	if u != nil && strings.Contains(u.Host, ":") {
 		result.ErrorHandler(isPortValid(u.Port()))
 		if len(strings.Split(u.Host, ":")[0]) < MinLengthName {
 			result.AddError(fmt.Errorf("to short Host name"))
 		}
+
+		if !strings.Contains(u.Scheme, protocol) {
+			result.AddError(fmt.Errorf("invalid http in schema"))
+		}
 	} else {
-		result.ErrorHandler(fmt.Errorf("no port value"))
+		result.ErrorHandler(noPortError)
 	}
-	protocol := "http"
-	if !strings.Contains(u.Scheme, protocol) {
-		result.AddError(fmt.Errorf("invalid http in schema"))
-	}
+
 
 	// Проверка поля "sentry_url"
 	result.SetField("sentry_url")
@@ -176,9 +182,7 @@ func (c *ConfigStruct) GetValidationResult() *ValidationResult {
 
 	// Проверка поля "kafka_broker"
 	result.SetField("kafka_broker")
-	u, err = url.Parse(c.KafkaBroker)
-	result.ErrorHandler(err)
-	if u != nil && strings.Contains(u.Host, ":") {
+	if strings.LastIndexByte(c.KafkaBroker, ':') != -1 {
 		bm := strings.Split(c.KafkaBroker, ":")
 		if len(bm) != 2 {
 			result.AddError(fmt.Errorf("invalid field value"))
@@ -189,6 +193,8 @@ func (c *ConfigStruct) GetValidationResult() *ValidationResult {
 			}
 			result.ErrorHandler(isPortValid(port))
 		}
+	} else {
+		result.AddError(noPortError)
 	}
 
 	// Проверка поля "some_app_id"
@@ -207,9 +213,11 @@ func (c *ConfigStruct) GetValidationResult() *ValidationResult {
 	return &result
 }
 
+// Проверка "валидности" переданного строкового значения "порта"
+// Возвращает ошибку, если не переданное значение не валидно.
 func isPortValid(port string) error {
 	if strings.TrimSpace(port) == "" {
-		return fmt.Errorf("no port value")
+		return noPortError
 	}
 	p, err := strconv.Atoi(port)
 	if err != nil {
