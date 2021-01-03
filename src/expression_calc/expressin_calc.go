@@ -21,8 +21,7 @@ func ParseOperands(expression string) ([]int, string, error) {
 
 	for _, o := range operators {
 		// Пропускаем первый символ выражения (если число отрицательное)
-		if operandInd := strings.LastIndex(expression, string(o));
-			operandInd != -1 && operandInd != 0 {
+		if operandInd := strings.LastIndex(expression, string(o)); operandInd != -1 && operandInd != 0 {
 			if operandInd >= len(exp) {
 				return nil, "", fmt.Errorf("Позиция оператора - неверная\n")
 			}

@@ -22,7 +22,7 @@ func calcFizzBuzz(in int) string {
 }
 
 func FizzBuzz() {
-	for i:=0; i<=100; i++ {
+	for i := 0; i <= 100; i++ {
 		fmt.Println(calcFizzBuzz(i))
 	}
 }

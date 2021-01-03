@@ -184,4 +184,3 @@ func TestValidationResult_AddError(t *testing.T) {
 		t.Fatalf("Error must be added in key value-array, but was not")
 	}
 }
-
