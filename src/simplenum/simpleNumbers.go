@@ -25,8 +25,8 @@ func GetSimpleArray(length int) []int {
 	return arr
 }
 
-func GetSimpleNumbersCycle() []int {
+func GetSimpleNumbersCycle() ([]int, error) {
 	length := input.GetLengthFromInput(os.Stdin)
-	return GetSimpleArray(length)
+	return GetSimpleArray(length), nil
 
 }

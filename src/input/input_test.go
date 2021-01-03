@@ -4,6 +4,8 @@ import (
 	"bytes"
 	"github.com/akaKAIN/Go_GB_base/src/mathoperation"
 	"github.com/stretchr/testify/assert"
+	"log"
+	"os"
 	"testing"
 )
 
@@ -17,8 +19,10 @@ func TestInput(t *testing.T) {
 	assert.Equal(t, result, expect, "Should be equal")
 }
 
-// TODO
-func Test_makeExpression(t *testing.T) {}
+func Test_makeExpression(t *testing.T) {
+	result := makeExpression(os.Stdin)
+	log.Println(result)
+}
 
 func Test_getOperand(t *testing.T) {
 	tests := []struct {
@@ -49,5 +53,31 @@ func Test_getHandlerByOperator(t *testing.T) {
 		handlerResult := handler(oper1, oper2)
 		expectedResult := m[operator](oper1, oper2)
 		assert.Equal(t, handlerResult, expectedResult, "Should be equal")
+	}
+}
+
+func TestCalcExpression(t *testing.T) {
+	stdin := new(bytes.Buffer)
+	inputString := "12+30"
+	stdin.Write([]byte(inputString + "\n"))
+
+	result := CalcExpression(stdin)
+	assert.Equal(t, result, 42, "Should be equal")
+}
+
+func TestGetLengthFromInput(t *testing.T) {
+	stdin := new(bytes.Buffer)
+	tests := []struct {
+		in  string
+		out int
+	} {
+		{"3", 3},
+		{ "5", 5},
+		{"10", 10},
+	}
+	for _, tc := range tests {
+		stdin.Write([]byte(tc.in + "\n"))
+		length := GetLengthFromInput(stdin)
+		assert.Equal(t, length, tc.out, "Should be equal")
 	}
 }
