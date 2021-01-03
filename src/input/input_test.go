@@ -70,9 +70,9 @@ func TestGetLengthFromInput(t *testing.T) {
 	tests := []struct {
 		in  string
 		out int
-	} {
+	}{
 		{"3", 3},
-		{ "5", 5},
+		{"5", 5},
 		{"10", 10},
 	}
 	for _, tc := range tests {

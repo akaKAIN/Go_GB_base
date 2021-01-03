@@ -19,7 +19,7 @@ func makeExpression(reader io.Reader) int {
 		numA, numB       int
 		operationHandler func(int, int) int
 	)
-	numA = getOperand(reader)
+	numA =  getOperand(reader)
 	operationHandler = getHandlerByOperator(reader)
 	numB = getOperand(reader)
 
