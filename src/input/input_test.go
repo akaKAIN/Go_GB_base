@@ -4,8 +4,6 @@ import (
 	"bytes"
 	"github.com/akaKAIN/Go_GB_base/src/mathoperation"
 	"github.com/stretchr/testify/assert"
-	"log"
-	"os"
 	"testing"
 )
 
@@ -17,11 +15,6 @@ func TestInput(t *testing.T) {
 	stdin.Write(userInput)
 	result := Input(string(userInput), stdin)
 	assert.Equal(t, result, expect, "Should be equal")
-}
-
-func Test_makeExpression(t *testing.T) {
-	result := makeExpression(os.Stdin)
-	log.Println(result)
 }
 
 func Test_getOperand(t *testing.T) {
