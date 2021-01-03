@@ -1,6 +1,9 @@
 package simplenum
 
-import "github.com/akaKAIN/Go_GB_base/src/input"
+import (
+	"github.com/akaKAIN/Go_GB_base/src/input"
+	"os"
+)
 
 /*
 Сложность O(n log(log n))) взята из Wiki и с учетом того,
@@ -23,7 +26,7 @@ func GetSimpleArray(length int) []int {
 }
 
 func GetSimpleNumbersCycle() []int {
-	length := input.GetLengthFromInput()
+	length := input.GetLengthFromInput(os.Stdin)
 	return GetSimpleArray(length)
 
 }
