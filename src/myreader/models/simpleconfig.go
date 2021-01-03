@@ -163,7 +163,6 @@ func (c *ConfigStruct) GetValidationResult() *ValidationResult {
 		result.ErrorHandler(noPortError)
 	}
 
-
 	// Проверка поля "sentry_url"
 	result.SetField("sentry_url")
 	u, err = url.Parse(c.SentryURL)
