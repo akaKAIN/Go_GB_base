@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"github.com/akaKAIN/Go_GB_base/src/expression_calc"
 	"github.com/akaKAIN/Go_GB_base/src/mathoperation"
-	"os"
+	"io"
 	"strconv"
 	"strings"
 )
@@ -14,14 +14,14 @@ import (
 Функция содержащая полный цикл ввода и вычисления мат. выражения.
 return: рузультат мат.вычислений.
 */
-func makeExpression() int {
+func makeExpression(reader io.Reader) int {
 	var (
 		numA, numB       int
 		operationHandler func(int, int) int
 	)
-	numA = getOperand()
-	operationHandler = getHandlerByOperator()
-	numB = getOperand()
+	numA =  getOperand(reader)
+	operationHandler = getHandlerByOperator(reader)
+	numB = getOperand(reader)
 
 	return operationHandler(numA, numB)
 
@@ -31,8 +31,8 @@ func makeExpression() int {
 Запрос ввода от пользователя.
 return: введеный текст
 */
-func Input(msg string) string {
-	var scanner = bufio.NewScanner(os.Stdin)
+func Input(msg string, reader io.Reader) string {
+	var scanner = bufio.NewScanner(reader)
 	fmt.Print(msg)
 	scanner.Scan()
 	text := scanner.Text()
@@ -42,9 +42,9 @@ func Input(msg string) string {
 /**
 Парсинг числа введенного пользователем
 */
-func getOperand() int {
+func getOperand(reader io.Reader) int {
 	for {
-		input := Input("Введите целое число: ")
+		input := Input("Введите целое число: ", reader)
 		num, err := strconv.Atoi(input)
 		if err != nil {
 			fmt.Printf("Значение %s не является целым числом.\n", input)
@@ -58,13 +58,13 @@ func getOperand() int {
 Получение от пользователя ввода математического оператора
 return: функцию соответствующую введеному мат.оператору
 */
-func getHandlerByOperator() func(int, int) int {
+func getHandlerByOperator(reader io.Reader) func(int, int) int {
 	operators := []string{"+", "-", "*", "/"}
 	message := fmt.Sprintf("Введите один из операторов => (%s): ", strings.Join(operators, " "))
 	operationsMap := mathoperation.GetOperationsMap()
 
 	for {
-		operator := Input(message)
+		operator := Input(message, reader)
 		handlerFunc, isExists := operationsMap[operator]
 		if isExists {
 			return handlerFunc
@@ -78,9 +78,9 @@ func getHandlerByOperator() func(int, int) int {
 Получение от пользователя ввода с числом
 верхней границей натуральный чисел.
 */
-func GetLengthFromInput() int {
+func GetLengthFromInput(reader io.Reader) int {
 	for {
-		input := Input("Введите верхний порог для поиска натурального числа: ")
+		input := Input("Введите верхний порог для поиска натурального числа: ", reader)
 		num, err := strconv.Atoi(input)
 		if err != nil || num < 3 {
 			fmt.Println("Некорректный ввод")
@@ -94,10 +94,10 @@ func GetLengthFromInput() int {
 Получение от пользователя математического выражения
 Возвращает результат вычисления
 */
-func CalcExpression() (result int) {
+func CalcExpression(reader io.Reader) (result int) {
 	operationsMap := mathoperation.GetOperationsMap()
 	for {
-		input := Input("Введите математическое выражение (пример: 256+32): ")
+		input := Input("Введите математическое выражение (пример: 256+32): ", reader)
 		nums, operator, err := expression_calc.ParseOperands(input)
 		if err != nil {
 			fmt.Println(err)

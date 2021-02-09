@@ -1,6 +1,7 @@
 package models
 
 import (
+	"errors"
 	"fmt"
 	"github.com/stretchr/testify/assert"
 	"testing"
@@ -185,3 +186,36 @@ func TestValidationResult_AddError(t *testing.T) {
 	}
 }
 
+func ExampleValidationResult_SetField() {
+	vr := new(ValidationResult)
+	fieldName := "fieldOne"
+	vr.SetField(fieldName)
+	fmt.Println(vr.field)
+	// Output: fieldOne
+}
+
+func ExampleValidationResult_GetField() {
+	vr := new(ValidationResult)
+	fieldName := "fieldOne"
+	vr.field = fieldName
+	fmt.Println(vr.GetField())
+	// Output: fieldOne
+}
+
+func TestValidationResult_IsValid(t *testing.T) {
+	err := errors.New("some error")
+	tc := struct {
+		name      string
+		fieldName string
+		errorsArr []error
+		expect    bool
+	}{"notEmpty", "test1", []error{err}, false}
+
+	vr := new(ValidationResult)
+	assert.Equal(t, len(vr.Errors), 0, "Init with empty map")
+	assert.True(t, vr.IsValid(), "Should be true")
+	vr.Errors = make(map[string][]error)
+	vr.Errors[tc.fieldName] = tc.errorsArr
+	assert.Equal(t, tc.expect, vr.IsValid(),  "Should be equal")
+
+}

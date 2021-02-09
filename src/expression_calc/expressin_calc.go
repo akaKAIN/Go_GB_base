@@ -10,7 +10,7 @@ import (
 func ParseOperands(expression string) ([]int, string, error) {
 	var (
 		operand   string
-		strArr    []string
+		strArr    [2]string
 		operators = "+-*/"
 		intArr    = make([]int, 2, 2)
 	)
@@ -18,26 +18,24 @@ func ParseOperands(expression string) ([]int, string, error) {
 	if !bytes.ContainsAny(exp, operators) {
 		return nil, "", fmt.Errorf("Неверное выражение - неизвестный математический оператор.\n")
 	}
-	for ind, val := range exp {
-		// Пропускаем первый символ выражения (число отрицательное)
-		if strings.ContainsRune(operators, rune(val)) && ind != 0 {
-			operand = string(val)
-			break
+
+	for _, o := range operators {
+		// Пропускаем первый символ выражения (если число отрицательное)
+		if operandInd := strings.LastIndex(expression, string(o)); operandInd != -1 && operandInd != 0 {
+			if operandInd >= len(exp) {
+				return nil, "", fmt.Errorf("Позиция оператора - неверная\n")
+			}
+			operand = string(expression[operandInd])
+			strArr[0], strArr[1] = string(exp[:operandInd]), string(exp[operandInd+1:])
 		}
 	}
-	strArr = strings.Split(expression, operand)
-	if len(strArr) == 2 {
 
-		// Приводим строковоые значения к числу и добаявляем в слайс с числами.
-		for ind, val := range strArr {
-			if num, err := strconv.Atoi(val); err != nil {
-				return nil, "", fmt.Errorf("Неверное выражение - введены некорректные числа\n")
-			} else {
-				intArr[ind] = num
-			}
+	for ind, val := range strArr {
+		if num, err := strconv.Atoi(val); err != nil {
+			return nil, "", fmt.Errorf("Неверное выражение - введены некорректные числа\n")
+		} else {
+			intArr[ind] = num
 		}
-	} else {
-		return nil, "", fmt.Errorf("Неверное выражение - введено слишком много операторов.\n")
 	}
 
 	return intArr, operand, nil
