@@ -45,6 +45,18 @@ func TestParseOperands(t *testing.T) {
 			expectedOperand: "",
 		},
 		{
+			expectedError:   true,
+			expression:      "234%12+3",
+			expectedNums:    nil,
+			expectedOperand: "",
+		},
+		{
+			expectedError:   true,
+			expression:      "234%12%3",
+			expectedNums:    nil,
+			expectedOperand: "",
+		},
+		{
 			expectedError:   false,
 			expression:      "-111+11",
 			expectedNums:    []int{-111, 11},
@@ -52,18 +64,18 @@ func TestParseOperands(t *testing.T) {
 		},
 	}
 
-	for _, test := range caseList {
-		nums, operand, err := ParseOperands(test.expression)
+	for _, tc := range caseList {
+		nums, operand, err := ParseOperands(tc.expression)
 		errorExist := err != nil
-		if errorExist != test.expectedError {
-			t.Fatalf("Expected error: %v, but gotted: %v", test.expectedError, err)
+		if errorExist != tc.expectedError {
+			t.Fatalf("%s: Expected error: %v, but gotted: %v", tc.expression, tc.expectedError, err)
 		}
-		if !test.expectedError {
-			if !reflect.DeepEqual(nums, test.expectedNums) {
-				t.Fatalf("Expected result nums: %q, but gotted: %q", test.expectedNums, nums)
+		if !tc.expectedError {
+			if !reflect.DeepEqual(nums, tc.expectedNums) {
+				t.Fatalf("%s: Expected result nums: %q, but gotted: %q", tc.expression, tc.expectedNums, nums)
 			}
-			if operand != test.expectedOperand {
-				t.Fatalf("Expected operand: %q, but gotted: %q", test.expectedOperand, operand)
+			if operand != tc.expectedOperand {
+				t.Fatalf("Expected operand: %q, but gotted: %q", tc.expectedOperand, operand)
 			}
 		}
 	}

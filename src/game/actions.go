@@ -4,10 +4,11 @@ import (
 	"fmt"
 	"github.com/akaKAIN/Go_GB_base/src/game/models"
 	"github.com/akaKAIN/Go_GB_base/src/input"
+	"os"
 )
 
 func getPlayer() *models.Person {
-	name := input.Input("Enter name of your hero: ")
+	name := input.Input("Enter name of your hero: ", os.Stdin)
 	return models.CreatePlayer(name)
 }
 

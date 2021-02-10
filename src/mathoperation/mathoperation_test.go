@@ -1,6 +1,9 @@
 package mathoperation
 
-import "testing"
+import (
+	"github.com/stretchr/testify/assert"
+	"testing"
+)
 
 func Test_add(t *testing.T) {
 	numA, numB, expectedResult := 3, 4, 7
@@ -37,5 +40,20 @@ func Test_div(t *testing.T) {
 	result = div(numA, numB)
 	if result != expectedResult {
 		t.Fatalf("Div error: expected %d, but got %d", expectedResult, result)
+	}
+}
+
+func TestGetOperationsMap(t *testing.T) {
+	const (
+		sum = "+"
+		mul = "*"
+		sub = "-"
+		div = "/"
+	)
+	availableOperators := []string{sum, mul, sub, div}
+	m := GetOperationsMap()
+	for _, operator := range availableOperators {
+		_, ok := m[operator]
+		assert.True(t, ok, "Should exist")
 	}
 }
